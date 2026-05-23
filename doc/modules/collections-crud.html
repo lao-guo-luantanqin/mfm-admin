@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>集合文档 CRUD · mfm-admin</title>
+    <link rel="stylesheet" href="../assets/style.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="side" id="doc-sidebar" aria-label="文档导航"></aside>
+      <main>
+        <nav class="breadcrumb" id="doc-breadcrumb" aria-label="面包屑"></nav>
+        <a class="back-home" id="doc-back-home" href="../index.html"
+          >← 文档门户</a
+        >
+
+        <header class="hero">
+          <div class="eyebrow muted">模块 · 业务 · 维护 2026-05-23</div>
+          <h1>集合文档 CRUD</h1>
+          <p class="lead">
+            白名单 Mongo 集合的通用表格 + JSON 编辑器，替代原 uniCloud clientDB
+            运营操作。
+          </p>
+        </header>
+
+        <section class="panel section-anchor">
+          <h2>页面</h2>
+          <p>
+            <code>src/views/business/collections/index.vue</code>（路由名
+            <code>BusinessCollections</code>）
+          </p>
+          <ul>
+            <li>集合下拉：来自 <code>GET /admin/collections</code></li>
+            <li>表格列：首行样本动态推断 + 固定 <code>_id</code></li>
+            <li>搜索：<code>keyword</code> 查询参数</li>
+            <li>
+              新建/编辑：对话框内 JSON 文本，提交前 <code>JSON.parse</code> 校验
+            </li>
+            <li>
+              删除：<code>ElMessageBox.confirm</code> 后 <code>DELETE</code>
+            </li>
+          </ul>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>API 封装</h2>
+          <p><code>src/api/admin/collections.ts</code></p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>函数</th>
+                  <th>HTTP</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>fetchCollectionMeta</code></td>
+                  <td>GET <code>/admin/collections</code></td>
+                </tr>
+                <tr>
+                  <td><code>fetchRecordsPage</code></td>
+                  <td>GET <code>/admin/collections/{name}/records</code></td>
+                </tr>
+                <tr>
+                  <td><code>saveRecord</code></td>
+                  <td>POST 或 PUT（有 docId 时）</td>
+                </tr>
+                <tr>
+                  <td><code>deleteRecord</code></td>
+                  <td>DELETE</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>后端</h2>
+          <ul>
+            <li>路由：<code>mfm_api/api/admin/collections_router.py</code></li>
+            <li>
+              服务：<code>mfm_api/services/admin/collections/crud.py</code>
+            </li>
+            <li>契约：<code>mfm_api/schemas/admin/collections.py</code></li>
+            <li>
+              白名单：与 sync-batch 相同
+              env（<code>MFM_API_SYNC_BATCH_ALLOWED_COLLECTIONS</code>）
+            </li>
+          </ul>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>局限与后续</h2>
+          <ul>
+            <li>
+              当前为<strong>通用 JSON 编辑</strong
+              >，无字段级表单校验与关联选择器
+            </li>
+            <li>
+              复杂集合（如嵌套图片、关联 ID）运营体验有限，可按集合拆专用页
+            </li>
+            <li>写操作校验以后端 Beanie / sync-batch 规则为准</li>
+          </ul>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>验收清单</h2>
+          <ol>
+            <li>后端 env 含目标集合名</li>
+            <li>登录后菜单可见「集合文档」</li>
+            <li>列表分页、keyword 搜索正常</li>
+            <li>新建/编辑/删除后列表刷新</li>
+            <li>非白名单集合不可写（403/404）</li>
+          </ol>
+        </section>
+      </main>
+    </div>
+    <script src="../assets/common.js"></script>
+    <script>
+      DocShell.init({ pageId: "collections-crud", title: "集合文档 CRUD" });
+    </script>
+  </body>
+</html>

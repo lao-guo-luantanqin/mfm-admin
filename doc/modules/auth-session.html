@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>鉴权与会话 · mfm-admin</title>
+    <link rel="stylesheet" href="../assets/style.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="side" id="doc-sidebar" aria-label="文档导航"></aside>
+      <main>
+        <nav class="breadcrumb" id="doc-breadcrumb" aria-label="面包屑"></nav>
+        <a class="back-home" id="doc-back-home" href="../index.html"
+          >← 文档门户</a
+        >
+
+        <header class="hero">
+          <div class="eyebrow muted">模块 · 鉴权 · 维护 2026-05-23</div>
+          <h1>鉴权与会话</h1>
+          <p class="lead">
+            pure-admin <code>setToken</code> 方案 + mfm-api Admin 专用登录契约。
+          </p>
+        </header>
+
+        <section class="panel section-anchor">
+          <h2>登录方式</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>方式</th>
+                  <th>入口</th>
+                  <th>API</th>
+                  <th>说明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>邮箱密码</td>
+                  <td>登录页表单</td>
+                  <td><code>POST /admin/auth/login</code></td>
+                  <td><code>username</code> 字段值为邮箱</td>
+                </tr>
+                <tr>
+                  <td>开发虚拟登录</td>
+                  <td>登录页按钮（DEV）</td>
+                  <td><code>POST /admin/auth/dev-login</code></td>
+                  <td>
+                    需 <code>VITE_DEV_MOCK_LOGIN=true</code>；后端 dev 环境
+                    superuser
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>前端文件</h2>
+          <ul>
+            <li>
+              <code>src/api/user.ts</code> —
+              <code>getLogin</code>、<code>getDevLogin</code>、<code
+                >refreshTokenApi</code
+              >
+            </li>
+            <li>
+              <code>src/store/modules/user.ts</code> —
+              <code>loginByUsername</code
+              >、<code>loginByDev</code>、<code>handRefreshToken</code>、<code
+                >logOut</code
+              >
+            </li>
+            <li>
+              <code>src/utils/auth.ts</code> — <code>getToken</code> /
+              <code>setToken</code> / <code>removeToken</code>
+            </li>
+            <li><code>src/views/login/index.vue</code> — UI 与虚拟登录开关</li>
+          </ul>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>Token 存储</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>存储</th>
+                  <th>Key</th>
+                  <th>内容</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Cookie</td>
+                  <td><code>authorized-token</code></td>
+                  <td>
+                    <code>accessToken</code>、<code>expires</code>、<code
+                      >refreshToken</code
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td>localStorage</td>
+                  <td><code>user-info</code></td>
+                  <td>头像、用户名、roles、permissions 等</td>
+                </tr>
+                <tr>
+                  <td>Cookie</td>
+                  <td><code>multiple-tabs</code></td>
+                  <td>多标签会话标记</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            无感 refresh：见 <a href="./http-client.html">HTTP 客户端</a> 专题。
+          </p>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>角色与权限</h2>
+          <p>
+            登录响应一次返回 <code>roles</code>（页面级）与
+            <code>permissions</code>（按钮级），写入 Pinia user store。
+          </p>
+          <p>
+            后端门禁：<code>is_superuser</code>、<code
+              >MFM_API_ADMIN_ALLOWED_EMAILS</code
+            >
+            等（见 mfm-api <code>services/admin/auth/access.py</code>）。
+          </p>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>登出</h2>
+          <p>
+            <code>useUserStore().logOut()</code>：清
+            token、重置路由与标签页、跳转
+            <code>/login</code>。当前为前端登出，不调用后端 revoke 接口。
+          </p>
+        </section>
+      </main>
+    </div>
+    <script src="../assets/common.js"></script>
+    <script>
+      DocShell.init({ pageId: "auth-session", title: "鉴权与会话" });
+    </script>
+  </body>
+</html>

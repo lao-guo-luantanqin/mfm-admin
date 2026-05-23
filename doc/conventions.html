@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>编码约定与护栏 · mfm-admin</title>
+    <link rel="stylesheet" href="./assets/style.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="side" id="doc-sidebar" aria-label="文档导航"></aside>
+      <main>
+        <nav class="breadcrumb" id="doc-breadcrumb" aria-label="面包屑"></nav>
+        <a class="back-home" id="doc-back-home" href="./index.html"
+          >← 文档门户</a
+        >
+
+        <header class="hero">
+          <div class="eyebrow muted">核心 · 维护 2026-05-23</div>
+          <h1>编码约定与护栏</h1>
+          <p class="lead">
+            在 pure-admin 基线上的 MFM 定制约定与 Review 门禁。
+          </p>
+        </header>
+
+        <section class="panel section-anchor">
+          <h2>路径与别名</h2>
+          <ul>
+            <li><code>@/</code> → <code>src/</code></li>
+            <li>业务 API：<code>src/api/admin/</code></li>
+            <li>业务视图：<code>src/views/business/</code></li>
+            <li>
+              动态路由 component 字符串相对于 <code>src/views/</code>（不含
+              <code>.vue</code> 后缀）
+            </li>
+          </ul>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>相对 pure-admin 的 MFM 改动</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>文件</th>
+                  <th>改动要点</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>src/api/user.ts</code></td>
+                  <td>登录/refresh 指向 <code>/admin/auth/*</code></td>
+                </tr>
+                <tr>
+                  <td><code>src/api/routes.ts</code></td>
+                  <td><code>GET /admin/menus</code></td>
+                </tr>
+                <tr>
+                  <td><code>src/api/admin/collections.ts</code></td>
+                  <td>集合 CRUD REST</td>
+                </tr>
+                <tr>
+                  <td><code>src/utils/http/index.ts</code></td>
+                  <td><code>VITE_SERVER_BASEURL</code>、Admin 鉴权白名单</td>
+                </tr>
+                <tr>
+                  <td><code>src/views/business/collections/</code></td>
+                  <td>通用 Mongo 文档管理页</td>
+                </tr>
+                <tr>
+                  <td><code>src/views/login/index.vue</code></td>
+                  <td>开发环境虚拟登录入口</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>HTTP 分层</h2>
+          <div class="flow-block">
+            views/*.vue → api/admin/*.ts → utils/http → mfm-api
+          </div>
+          <ul>
+            <li>页面/组件<strong>不</strong>直接 <code>import axios</code></li>
+            <li>
+              类型优先放在 API 模块旁（如
+              <code>CollectionMeta</code>），避免全局 any
+            </li>
+            <li>
+              错误提示由 http 拦截器统一处理；页面层仅处理业务流程（如 JSON
+              解析失败）
+            </li>
+          </ul>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>权限</h2>
+          <ul>
+            <li>
+              路由级：<code>meta.roles</code>，后端菜单与 pure-admin
+              <code>filterNoPermissionTree</code> 配合
+            </li>
+            <li>
+              按钮级：<code>v-perms</code> /
+              <code>RePerms</code>，数据来自登录返回的 <code>permissions</code>
+            </li>
+            <li>服务端仍以 Admin JWT + 超管/邮箱白名单为最终门禁</li>
+          </ul>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>命名</h2>
+          <ul>
+            <li>
+              Vue 组件
+              <code>defineOptions({ name: "BusinessCollections" })</code> 与路由
+              name 一致（keep-alive）
+            </li>
+            <li>
+              API 函数：动词 + 资源，如 <code>fetchRecordsPage</code>、<code
+                >saveRecord</code
+              >
+            </li>
+            <li>环境变量：<code>VITE_*</code> 前缀，密钥勿提交仓库</li>
+          </ul>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>禁止模式</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>禁止</th>
+                  <th>原因</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>第二套 HTTP 客户端</td>
+                  <td>鉴权/refresh 逻辑分叉</td>
+                </tr>
+                <tr>
+                  <td>调用 C 端 API 写业务库</td>
+                  <td>绕过 Admin 白名单与审计</td>
+                </tr>
+                <tr>
+                  <td>前端硬编码可写集合列表</td>
+                  <td>与后端 env 漂移</td>
+                </tr>
+                <tr>
+                  <td>生产启用 vite-plugin-fake-server mock</td>
+                  <td>与真实 API 不一致</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>Lint 与提交</h2>
+          <ul>
+            <li><code>pnpm lint</code> — ESLint + Prettier + Stylelint</li>
+            <li>
+              <code>pnpm typecheck</code> — <code>tsc</code> +
+              <code>vue-tsc</code>
+            </li>
+            <li>husky pre-commit 见 <code>.husky/pre-commit</code></li>
+          </ul>
+        </section>
+      </main>
+    </div>
+    <script src="./assets/common.js"></script>
+    <script>
+      DocShell.init({ pageId: "conventions", title: "编码约定与护栏" });
+    </script>
+  </body>
+</html>

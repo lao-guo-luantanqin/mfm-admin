@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin API 边界 · mfm-admin</title>
+    <link rel="stylesheet" href="./assets/style.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="side" id="doc-sidebar" aria-label="文档导航"></aside>
+      <main>
+        <nav class="breadcrumb" id="doc-breadcrumb" aria-label="面包屑"></nav>
+        <a class="back-home" id="doc-back-home" href="./index.html"
+          >← 文档门户</a
+        >
+
+        <header class="hero">
+          <div class="eyebrow muted">核心 · API · 维护 2026-05-23</div>
+          <h1>Admin API 边界</h1>
+          <p class="lead">
+            管理端<strong>仅</strong>调用 mfm-api 前缀
+            <code>/admin/*</code>；字段级契约以 OpenAPI
+            <code>/api/docs</code>（tag: <code>admin</code>）为准。
+          </p>
+          <div class="callout callout--warn">
+            <strong>禁止：</strong>直连 C 端
+            <code>/api/property/*</code> 等做运营写操作；禁止在前端复刻
+            sync-batch 批量协议。
+          </div>
+        </header>
+
+        <section class="panel section-anchor">
+          <h2>路由全表</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>用途</th>
+                  <th>方法</th>
+                  <th>路径</th>
+                  <th>前端封装</th>
+                  <th>后端</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>邮箱密码登录</td>
+                  <td>POST</td>
+                  <td><code>/admin/auth/login</code></td>
+                  <td><code>api/user.ts</code> · <code>getLogin</code></td>
+                  <td><code>api/admin/auth_router.py</code></td>
+                </tr>
+                <tr>
+                  <td>开发虚拟登录</td>
+                  <td>POST</td>
+                  <td><code>/admin/auth/dev-login</code></td>
+                  <td><code>getDevLogin</code></td>
+                  <td><code>auth_router.py</code></td>
+                </tr>
+                <tr>
+                  <td>Refresh token</td>
+                  <td>POST</td>
+                  <td><code>/admin/auth/refresh</code></td>
+                  <td><code>refreshTokenApi</code></td>
+                  <td><code>auth_router.py</code></td>
+                </tr>
+                <tr>
+                  <td>当前会话</td>
+                  <td>GET</td>
+                  <td><code>/admin/auth/me</code></td>
+                  <td>（可按需封装）</td>
+                  <td><code>auth_router.py</code></td>
+                </tr>
+                <tr>
+                  <td>动态菜单</td>
+                  <td>GET</td>
+                  <td><code>/admin/menus</code></td>
+                  <td>
+                    <code>api/routes.ts</code> · <code>getAsyncRoutes</code>
+                  </td>
+                  <td><code>api/admin/menus_router.py</code></td>
+                </tr>
+                <tr>
+                  <td>集合元数据</td>
+                  <td>GET</td>
+                  <td><code>/admin/collections</code></td>
+                  <td><code>api/admin/collections.ts</code></td>
+                  <td><code>collections_router.py</code></td>
+                </tr>
+                <tr>
+                  <td>分页列表</td>
+                  <td>GET</td>
+                  <td><code>/admin/collections/{name}/records</code></td>
+                  <td><code>fetchRecordsPage</code></td>
+                  <td><code>collections_router.py</code></td>
+                </tr>
+                <tr>
+                  <td>新建</td>
+                  <td>POST</td>
+                  <td><code>/admin/collections/{name}/records</code></td>
+                  <td><code>saveRecord</code></td>
+                  <td><code>collections_router.py</code></td>
+                </tr>
+                <tr>
+                  <td>更新</td>
+                  <td>PUT</td>
+                  <td><code>/admin/collections/{name}/records/{id}</code></td>
+                  <td><code>saveRecord</code></td>
+                  <td><code>collections_router.py</code></td>
+                </tr>
+                <tr>
+                  <td>删除</td>
+                  <td>DELETE</td>
+                  <td><code>/admin/collections/{name}/records/{id}</code></td>
+                  <td><code>deleteRecord</code></td>
+                  <td><code>collections_router.py</code></td>
+                </tr>
+                <tr>
+                  <td>角色列表</td>
+                  <td>GET</td>
+                  <td><code>/admin/roles</code></td>
+                  <td>
+                    <code>api/admin/rbac.ts</code> ·
+                    <code>fetchAdminRoles</code>
+                  </td>
+                  <td><code>roles_router.py</code></td>
+                </tr>
+                <tr>
+                  <td>角色 CRUD</td>
+                  <td>POST/PUT/DELETE</td>
+                  <td><code>/admin/roles</code></td>
+                  <td><code>createAdminRole</code> 等</td>
+                  <td><code>roles_router.py</code></td>
+                </tr>
+                <tr>
+                  <td>运营账号分页</td>
+                  <td>GET</td>
+                  <td><code>/admin/operators</code></td>
+                  <td><code>fetchOperatorsPage</code></td>
+                  <td><code>roles_router.py</code></td>
+                </tr>
+                <tr>
+                  <td>分配用户角色</td>
+                  <td>PUT</td>
+                  <td><code>/admin/operators/{userId}/roles</code></td>
+                  <td><code>setOperatorRoles</code></td>
+                  <td><code>roles_router.py</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>响应信封</h2>
+          <p>
+            与 pure-admin 习惯一致：顶层
+            <code>{ success, data, msg? }</code>。HTTP 层在
+            <code>utils/http</code> 对 <code>success === false</code> 弹错并
+            reject。
+          </p>
+          <p>
+            登录会话 <code>data</code> 字段（camelCase，由后端 OutBase
+            序列化）：<code>accessToken</code>、<code>refreshToken</code>、<code>expires</code>、<code>username</code>、<code>nickname</code>、<code>avatar</code>、<code>roles</code>、<code>permissions</code>。
+          </p>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>分页查询参数</h2>
+          <p>集合列表使用 pure-admin / Element 习惯别名：</p>
+          <ul>
+            <li><code>currentPage</code> — 页码，从 1 开始</li>
+            <li><code>pageSize</code> — 每页条数，后端上限 200</li>
+            <li><code>keyword</code> — 可选全文检索</li>
+          </ul>
+          <p>
+            响应
+            <code>data.list</code
+            >、<code>data.total</code>、<code>data.pageSize</code>、<code>data.currentPage</code>。
+          </p>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>后端白名单</h2>
+          <p>可管理集合由 mfm-api 环境变量控制，常见：</p>
+          <pre><code>MFM_API_SYNC_BATCH_ALLOWED_COLLECTIONS=mfm_property_project,mfm_banner,...</code></pre>
+          <p>
+            未在白名单的集合：meta 接口不返回或 CRUD 返回
+            403/404（以后端为准）。
+          </p>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>新增 Admin 能力检查单</h2>
+          <ol>
+            <li>
+              后端：<code>mfm_api/api/admin/</code> +
+              <code>schemas/admin/</code> + <code>services/admin/</code>
+            </li>
+            <li>注册到 <code>mfm_api/api/router.py</code></li>
+            <li>前端：<code>src/api/admin/&lt;feature&gt;.ts</code></li>
+            <li>
+              菜单：扩展 <code>services/admin/menus/registry.py</code> 的
+              <code>admin_async_routes()</code>
+            </li>
+            <li>
+              页面：<code>src/views/...</code> 并在菜单里写
+              <code>component</code> 路径
+            </li>
+            <li>更新本页路由表与 OpenAPI</li>
+          </ol>
+        </section>
+      </main>
+    </div>
+    <script src="./assets/common.js"></script>
+    <script>
+      DocShell.init({ pageId: "admin-api", title: "Admin API 边界" });
+    </script>
+  </body>
+</html>

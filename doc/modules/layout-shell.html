@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Layout 壳层 · mfm-admin</title>
+    <link rel="stylesheet" href="../assets/style.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="side" id="doc-sidebar" aria-label="文档导航"></aside>
+      <main>
+        <nav class="breadcrumb" id="doc-breadcrumb" aria-label="面包屑"></nav>
+        <a class="back-home" id="doc-back-home" href="../index.html"
+          >← 文档门户</a
+        >
+
+        <header class="hero">
+          <div class="eyebrow muted">模块 · Layout · 维护 2026-05-23</div>
+          <h1>Layout 壳层</h1>
+          <p class="lead">
+            vue-pure-admin 布局系统；MFM 业务逻辑应放在
+            <code>views/business</code>，而非改 layout 核心。
+          </p>
+        </header>
+
+        <section class="panel section-anchor">
+          <h2>结构</h2>
+          <pre><code>src/layout/index.vue
+├── lay-sidebar/     侧栏菜单（wholeMenus）
+├── lay-navbar/      顶栏
+├── lay-tag/         多标签页
+├── lay-content/     &lt;router-view&gt; + keep-alive
+├── lay-search/      菜单搜索
+├── lay-setting/     主题与布局设置
+└── lay-footer/</code></pre>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>platform-config</h2>
+          <ul>
+            <li>静态：<code>public/platform-config.json</code></li>
+            <li>
+              启动时
+              <code>getPlatformConfig(app)</code
+              >（<code>src/config/index.ts</code>）合并到全局
+              <code>$config</code>
+            </li>
+            <li>控制 Title、布局模式、是否显示 footer 等 pure-admin 行为</li>
+          </ul>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>通用组件（Re*）</h2>
+          <p>
+            <code>src/components/Re*</code> — pure-admin
+            封装：表格栏、权限、图标、对话框等。业务页可直接使用 Element Plus +
+            RePureTableBar。
+          </p>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>iframe 路由</h2>
+          <p>
+            外链菜单走 <code>layout/frame.vue</code>；当前 MFM 业务均为本地
+            SFC，未使用 iframe 菜单。
+          </p>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>样式</h2>
+          <ul>
+            <li>
+              全局：<code>src/style/index.scss</code>、<code>element-plus.scss</code>、<code
+                >tailwind.css</code
+              >
+            </li>
+            <li>
+              侧栏：<code>sidebar.scss</code>；暗色：<code>dark.scss</code>
+            </li>
+            <li>业务页优先 scoped SCSS，避免污染 layout</li>
+          </ul>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>修改原则</h2>
+          <ul>
+            <li>
+              品牌/logo：改 <code>SidebarLogo</code>、<code
+                >platform-config</code
+              >
+            </li>
+            <li>不要为单一业务集合改 layout 数据流</li>
+            <li>
+              升级 pure-admin 基线时，优先保持 layout 与 upstream diff 最小
+            </li>
+          </ul>
+        </section>
+      </main>
+    </div>
+    <script src="../assets/common.js"></script>
+    <script>
+      DocShell.init({ pageId: "layout-shell", title: "Layout 壳层" });
+    </script>
+  </body>
+</html>

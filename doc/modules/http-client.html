@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HTTP 客户端 · mfm-admin</title>
+    <link rel="stylesheet" href="../assets/style.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="side" id="doc-sidebar" aria-label="文档导航"></aside>
+      <main>
+        <nav class="breadcrumb" id="doc-breadcrumb" aria-label="面包屑"></nav>
+        <a class="back-home" id="doc-back-home" href="../index.html"
+          >← 文档门户</a
+        >
+
+        <header class="hero">
+          <div class="eyebrow muted">模块 · HTTP · 维护 2026-05-23</div>
+          <h1>HTTP 客户端</h1>
+          <p class="lead">
+            <code>src/utils/http/index.ts</code> — 全项目唯一 Axios 实例。
+          </p>
+        </header>
+
+        <section class="panel section-anchor">
+          <h2>配置</h2>
+          <ul>
+            <li>
+              <code>baseURL</code> ←
+              <code>import.meta.env.VITE_SERVER_BASEURL</code>（去尾斜杠）
+            </li>
+            <li><code>timeout</code>：30000 ms</li>
+            <li>
+              <code>paramsSerializer</code>：<code>qs.stringify</code>（兼容
+              pure-admin 分页参数）
+            </li>
+          </ul>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>鉴权白名单</h2>
+          <p>以下路径<strong>不</strong>附加 Bearer（也跳过 refresh 逻辑）：</p>
+          <pre><code>/admin/auth/login
+/admin/auth/dev-login
+/admin/auth/refresh</code></pre>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>请求拦截</h2>
+          <ol>
+            <li>读 Cookie/localStorage <code>getToken()</code></li>
+            <li>
+              若 access 未过期 → 设置
+              <code>Authorization: Bearer &lt;accessToken&gt;</code>
+            </li>
+            <li>
+              若过期 → 单飞 <code>handRefreshToken</code>，队列等待新 token
+              后重放请求
+            </li>
+          </ol>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>响应拦截</h2>
+          <ul>
+            <li>
+              成功：返回 <code>response.data</code>（非完整 AxiosResponse）
+            </li>
+            <li>
+              <code>success === false</code> → <code>message(msg)</code> +
+              reject
+            </li>
+            <li>HTTP 401/403 → <code>removeToken()</code></li>
+            <li>错误体 <code>msg</code> 字段 → toast 提示</li>
+          </ul>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>对外 API</h2>
+          <pre><code>import { http } from "@/utils/http";
+
+http.get&lt;T&gt;(url, { params })
+http.post&lt;T&gt;(url, { data })
+http.request&lt;T&gt;(method, url, config)</code></pre>
+          <p>
+            业务模块应通过 <code>src/api/*</code> 封装，而非页面直接拼 URL。
+          </p>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>与小程序对比</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>项目</th>
+                  <th>客户端</th>
+                  <th>基址 env</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>mfm-admin</td>
+                  <td>Axios · <code>utils/http</code></td>
+                  <td><code>VITE_SERVER_BASEURL</code></td>
+                </tr>
+                <tr>
+                  <td>mfm-uniapp-vue3</td>
+                  <td>
+                    <code>uni.request</code> · <code>utils/request.ts</code>
+                  </td>
+                  <td><code>env/.env.*</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>分层相同（api 模块 → 单一 http 工具），实现不同。</p>
+        </section>
+      </main>
+    </div>
+    <script src="../assets/common.js"></script>
+    <script>
+      DocShell.init({ pageId: "http-client", title: "HTTP 客户端" });
+    </script>
+  </body>
+</html>

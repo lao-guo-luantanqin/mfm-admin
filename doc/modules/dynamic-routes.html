@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>动态菜单与路由 · mfm-admin</title>
+    <link rel="stylesheet" href="../assets/style.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="side" id="doc-sidebar" aria-label="文档导航"></aside>
+      <main>
+        <nav class="breadcrumb" id="doc-breadcrumb" aria-label="面包屑"></nav>
+        <a class="back-home" id="doc-back-home" href="../index.html"
+          >← 文档门户</a
+        >
+
+        <header class="hero">
+          <div class="eyebrow muted">模块 · 路由 · 维护 2026-05-23</div>
+          <h1>动态菜单与路由</h1>
+          <p class="lead">
+            静态路由 + 后端 <code>GET /admin/menus</code> 驱动的 pure-admin
+            动态路由。
+          </p>
+        </header>
+
+        <section class="panel section-anchor">
+          <h2>流程</h2>
+          <ol>
+            <li>
+              登录成功 → 路由守卫调用
+              <code>initRouter()</code>（<code>src/router/utils.ts</code>）
+            </li>
+            <li>
+              <code>getAsyncRoutes()</code> → <code>GET /admin/menus</code>
+            </li>
+            <li>
+              <code>handleAsyncRoutes</code> 将 component 字符串映射为
+              <code>import.meta.glob('/src/views/**/*.{vue,tsx}')</code>
+            </li>
+            <li>
+              <code>usePermissionStore().handleWholeMenus(routes)</code>
+              生成侧栏菜单
+            </li>
+          </ol>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>关键文件</h2>
+          <ul>
+            <li><code>src/api/routes.ts</code> — HTTP 封装</li>
+            <li>
+              <code>src/router/index.ts</code> — 守卫、NProgress、token 检查
+            </li>
+            <li>
+              <code>src/router/utils.ts</code> —
+              <code>initRouter</code>、排序、权限过滤
+            </li>
+            <li>
+              <code>src/router/modules/*.ts</code> — 静态路由（home、error 等）
+            </li>
+            <li>
+              <code>src/store/modules/permission.ts</code> —
+              wholeMenus、keep-alive 缓存列表
+            </li>
+          </ul>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>后端菜单注册</h2>
+          <p>
+            菜单树由 mfm-api <code>services/admin/menus/registry.py</code> ·
+            <code>admin_async_routes()</code> 返回，示例：
+          </p>
+          <pre><code>{
+  "path": "/business/collections/index",
+  "name": "BusinessCollections",
+  "component": "business/collections/index",
+  "meta": { "title": "集合文档", "roles": ["admin", "editor"] }
+}</code></pre>
+          <p>
+            <code>component</code> 对应
+            <code>src/views/business/collections/index.vue</code>。
+          </p>
+          <p>
+            系统管理（RBAC）：<code>system/roles/index</code>、<code>system/operators/index</code>，仅
+            <code>meta.roles: ["admin"]</code> 可见。
+          </p>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>新增菜单页</h2>
+          <ol>
+            <li>
+              在 <code>src/views/</code> 下新增 SFC，设置
+              <code>defineOptions({ name: "..." })</code>
+            </li>
+            <li>在后端 <code>admin_async_routes()</code> 增加 child 节点</li>
+            <li>本地重启 mfm-api，刷新管理端验证侧栏与路由</li>
+            <li>若需按钮权限，在 meta 或页面内配合 <code>permissions</code></li>
+          </ol>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>静态 vs 动态</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>类型</th>
+                  <th>来源</th>
+                  <th>示例</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>静态</td>
+                  <td><code>router/modules/</code></td>
+                  <td>首页、错误页、remaining（login）</td>
+                </tr>
+                <tr>
+                  <td>动态</td>
+                  <td><code>/admin/menus</code></td>
+                  <td>业务数据、集合文档</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="../assets/common.js"></script>
+    <script>
+      DocShell.init({ pageId: "dynamic-routes", title: "动态菜单与路由" });
+    </script>
+  </body>
+</html>

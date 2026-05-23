@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pinia 全局状态 · mfm-admin</title>
+    <link rel="stylesheet" href="../assets/style.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="side" id="doc-sidebar" aria-label="文档导航"></aside>
+      <main>
+        <nav class="breadcrumb" id="doc-breadcrumb" aria-label="面包屑"></nav>
+        <a class="back-home" id="doc-back-home" href="../index.html"
+          >← 文档门户</a
+        >
+
+        <header class="hero">
+          <div class="eyebrow muted">模块 · 状态 · 维护 2026-05-23</div>
+          <h1>Pinia 全局状态</h1>
+          <p class="lead">pure-admin 默认 store 模块 + MFM 登录/API 适配。</p>
+        </header>
+
+        <section class="panel section-anchor">
+          <h2>模块一览</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Store</th>
+                  <th>文件</th>
+                  <th>职责</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>pure-user</code></td>
+                  <td><code>store/modules/user.ts</code></td>
+                  <td>用户信息、roles、permissions、登录/登出/refresh</td>
+                </tr>
+                <tr>
+                  <td><code>pure-permission</code></td>
+                  <td><code>store/modules/permission.ts</code></td>
+                  <td>wholeMenus、flatteningRoutes、keep-alive 缓存页</td>
+                </tr>
+                <tr>
+                  <td><code>pure-multiTags</code></td>
+                  <td><code>store/modules/multiTags.ts</code></td>
+                  <td>多标签页打开的路由栈</td>
+                </tr>
+                <tr>
+                  <td><code>pure-settings</code></td>
+                  <td><code>store/modules/settings.ts</code></td>
+                  <td>主题、布局模式、界面显示开关</td>
+                </tr>
+                <tr>
+                  <td><code>pure-app</code></td>
+                  <td><code>store/modules/app.ts</code></td>
+                  <td>侧栏折叠、设备类型等</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>Hook 用法</h2>
+          <p>
+            组件外或 setup 外使用 <code>useXxxStoreHook()</code>（见各模块底部
+            export），内部已注入 pinia 实例。
+          </p>
+          <pre><code>import { useUserStoreHook } from "@/store/modules/user";
+import { usePermissionStoreHook } from "@/store/modules/permission";</code></pre>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>与鉴权联动</h2>
+          <ul>
+            <li>
+              登录成功 → <code>setToken</code> 写 Cookie/localStorage + user
+              store SET_*
+            </li>
+            <li>refresh → <code>handRefreshToken</code> 更新 token</li>
+            <li>登出 → 清 user 字段 + permission 缓存 + 重置路由</li>
+          </ul>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>持久化</h2>
+          <p>
+            用户展示字段通过
+            <code>storageLocal</code>（<code>user-info</code>）恢复；token 在
+            Cookie。设置项可走 <code>responsive-storage</code>（见 settings /
+            platform-config）。
+          </p>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>业务页建议</h2>
+          <ul>
+            <li>
+              集合 CRUD 页状态用组件内 <code>ref</code> /
+              <code>reactive</code>，不必进全局 store
+            </li>
+            <li>仅跨 layout 需要的会话信息放 user / permission</li>
+          </ul>
+        </section>
+      </main>
+    </div>
+    <script src="../assets/common.js"></script>
+    <script>
+      DocShell.init({ pageId: "pinia-state", title: "Pinia 全局状态" });
+    </script>
+  </body>
+</html>

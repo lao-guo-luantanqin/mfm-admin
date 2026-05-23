@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>测试与验收 · mfm-admin</title>
+    <link rel="stylesheet" href="../assets/style.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="side" id="doc-sidebar" aria-label="文档导航"></aside>
+      <main>
+        <nav class="breadcrumb" id="doc-breadcrumb" aria-label="面包屑"></nav>
+        <a class="back-home" id="doc-back-home" href="../index.html"
+          >← 文档门户</a
+        >
+
+        <header class="hero">
+          <div class="eyebrow muted">运维 · 质量 · 维护 2026-05-23</div>
+          <h1>测试与验收</h1>
+          <p class="lead">静态检查 + Harness 校对 + 手工联调清单。</p>
+        </header>
+
+        <section class="panel section-anchor">
+          <h2>自动化</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>命令</th>
+                  <th>作用</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>pnpm typecheck</code></td>
+                  <td>TypeScript + vue-tsc 全量类型</td>
+                </tr>
+                <tr>
+                  <td><code>pnpm lint</code></td>
+                  <td>ESLint + Prettier + Stylelint</td>
+                </tr>
+                <tr>
+                  <td><code>pnpm verify:harness</code></td>
+                  <td>技能索引 + doc 门户关键页存在性</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            当前仓库<strong>无</strong> Vitest 单测；回归以 typecheck +
+            联调为主。
+          </p>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>Harness 校对</h2>
+          <pre><code>pnpm verify:harness</code></pre>
+          <p>
+            校验 <code>.agents/skills/index.md</code> 链接与
+            <code>doc/</code> 必需 HTML 页面。
+          </p>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>联调验收清单</h2>
+          <h3>鉴权</h3>
+          <ul>
+            <li>邮箱密码登录成功，侧栏出现动态菜单</li>
+            <li>开发虚拟登录（<code>VITE_DEV_MOCK_LOGIN=true</code>）</li>
+            <li>Token 过期后无感 refresh 或回登录</li>
+            <li>登出后无法访问业务路由</li>
+          </ul>
+          <h3>集合 CRUD</h3>
+          <ul>
+            <li>集合下拉与后端白名单一致</li>
+            <li>分页、keyword 搜索</li>
+            <li>JSON 新建/编辑/删除</li>
+            <li>非法 JSON 前端拦截提示</li>
+          </ul>
+          <h3>构建</h3>
+          <ul>
+            <li><code>pnpm build</code> 无错误</li>
+            <li>生产 baseURL 指向正确 API</li>
+          </ul>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>后端相关测试</h2>
+          <p>Admin API 单测在 mfm-api：</p>
+          <pre><code>cd ../mfm-api
+pytest tests/test_admin_auth_tokens.py tests/test_admin_console.py -q</code></pre>
+        </section>
+      </main>
+    </div>
+    <script src="../assets/common.js"></script>
+    <script>
+      DocShell.init({ pageId: "testing", title: "测试与验收" });
+    </script>
+  </body>
+</html>

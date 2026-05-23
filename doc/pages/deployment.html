@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>构建与环境 · mfm-admin</title>
+    <link rel="stylesheet" href="../assets/style.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="side" id="doc-sidebar" aria-label="文档导航"></aside>
+      <main>
+        <nav class="breadcrumb" id="doc-breadcrumb" aria-label="面包屑"></nav>
+        <a class="back-home" id="doc-back-home" href="../index.html"
+          >← 文档门户</a
+        >
+
+        <header class="hero">
+          <div class="eyebrow muted">运维 · 维护 2026-05-23</div>
+          <h1>构建与环境</h1>
+          <p class="lead">Vite 多模式环境变量与本地联调步骤。</p>
+        </header>
+
+        <section class="panel section-anchor">
+          <h2>快速联调</h2>
+          <pre><code># 1. 后端
+cd ../mfm-api
+uv run -m mfm_api
+
+# 2. 管理端
+cd ../mfm-admin
+cp .env.example .env.development.local
+pnpm install
+pnpm dev</code></pre>
+          <p>浏览器打开 http://localhost:8848</p>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>环境变量</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>变量</th>
+                  <th>说明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>VITE_SERVER_BASEURL</code></td>
+                  <td>mfm-api 根 URL，如 <code>http://127.0.0.1:8000</code></td>
+                </tr>
+                <tr>
+                  <td><code>VITE_DEV_MOCK_LOGIN</code></td>
+                  <td><code>true</code> 时登录页显示虚拟登录</td>
+                </tr>
+                <tr>
+                  <td><code>VITE_PUBLIC_PATH</code></td>
+                  <td>部署子路径（见 .env.production）</td>
+                </tr>
+                <tr>
+                  <td><code>VITE_ROUTER_HISTORY</code></td>
+                  <td><code>hash</code> 或 <code>h5</code> 模式</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            本地覆盖：复制 <code>.env.example</code> →
+            <code>.env.development.local</code>（勿提交密钥）。
+          </p>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>构建命令</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>命令</th>
+                  <th>用途</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>pnpm dev</code></td>
+                  <td>开发服务器 :8848</td>
+                </tr>
+                <tr>
+                  <td><code>pnpm build</code></td>
+                  <td>生产构建 → <code>dist/</code></td>
+                </tr>
+                <tr>
+                  <td><code>pnpm build:staging</code></td>
+                  <td>staging 模式构建</td>
+                </tr>
+                <tr>
+                  <td><code>pnpm preview</code></td>
+                  <td>预览 dist</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>后端依赖配置</h2>
+          <p>mfm-api <code>.env</code> 至少配置：</p>
+          <pre><code>MFM_API_ENVIRONMENT=dev
+MFM_API_SYNC_BATCH_ALLOWED_COLLECTIONS=mfm_property_project,mfm_banner,...</code></pre>
+          <p>
+            开发虚拟登录需 <code>MFM_API_ENVIRONMENT=dev</code>（或非
+            production）。
+          </p>
+        </section>
+
+        <section class="panel section-anchor">
+          <h2>Docker</h2>
+          <p>
+            仓库含 <code>Dockerfile</code>；编排通常由 DAS / mfm-datacenter
+            compose 引用。生产
+            <code>VITE_SERVER_BASEURL</code> 在构建时注入，指向对外 API 域名。
+          </p>
+        </section>
+      </main>
+    </div>
+    <script src="../assets/common.js"></script>
+    <script>
+      DocShell.init({ pageId: "deployment", title: "构建与环境" });
+    </script>
+  </body>
+</html>

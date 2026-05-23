@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agent 文档门户 · mfm-admin</title>
+    <link rel="stylesheet" href="./assets/style.css" />
+  </head>
+  <body>
+    <div class="portal">
+      <header class="hero">
+        <div class="eyebrow muted">doc · Agent 工作台 · 维护 2026-05-23</div>
+        <h1>mfm-admin · 文档套件</h1>
+        <p class="lead">
+          按<strong>运营后台模块</strong>梳理的前端协作文档。日常入口：<code
+            >AGENTS.md</code
+          >
+          · 浏览器门户：<strong>本页</strong>。 全部专题为
+          <strong>HTML 真值</strong>，本地双击即可打开，无外部依赖。
+        </p>
+        <div class="callout callout--info">
+          <strong>文档形态（2026-05-23）：</strong>协作文档以
+          <strong>HTML</strong> 为唯一真值（<code>doc/</code>）； Harness
+          校对：<code>pnpm verify:harness</code>。
+        </div>
+        <div class="callout callout--ok">
+          <strong>Admin API 真值：</strong>仅对接 mfm-api
+          <code>/admin/*</code>（非 C 端 <code>/api/*</code>）； 运行时契约见
+          OpenAPI <code>/api/docs</code>（<code>admin</code> tag）；
+          后端实现：<code>../mfm-api/mfm_api/api/admin/</code>。
+        </div>
+        <div class="flow-block">
+          登录 → Bearer → 动态菜单 → views/business/* → Axios →
+          /admin/collections|auth|menus
+        </div>
+
+        <div class="search-bar">
+          <input
+            id="doc-search"
+            type="search"
+            placeholder="搜索文档标题或描述…"
+            aria-label="搜索文档"
+          />
+        </div>
+        <div class="filter-tags">
+          <button type="button" class="filter-tag is-active" data-filter="all">
+            全部
+          </button>
+          <button type="button" class="filter-tag" data-filter="core">
+            核心
+          </button>
+          <button type="button" class="filter-tag" data-filter="module">
+            模块
+          </button>
+          <button type="button" class="filter-tag" data-filter="api">
+            API
+          </button>
+          <button type="button" class="filter-tag" data-filter="ops">
+            运维
+          </button>
+        </div>
+      </header>
+
+      <h2>核心 · 架构与约定</h2>
+      <div class="grid">
+        <article class="card" data-doc-card data-tag="core">
+          <span class="tag tag--core">总览</span>
+          <h3><a href="./architecture.html">系统架构</a></h3>
+          <p>vue-pure-admin-thin 栈、与 mfm-api 拓扑、目录分层。</p>
+          <div class="card-links"><a href="./architecture.html">打开 →</a></div>
+        </article>
+        <article class="card" data-doc-card data-tag="core api">
+          <span class="tag tag--api">API</span>
+          <h3><a href="./admin-api.html">Admin API 边界</a></h3>
+          <p><code>/admin/*</code> 路由表、前后端文件对照、禁止模式。</p>
+          <div class="card-links"><a href="./admin-api.html">打开 →</a></div>
+        </article>
+        <article class="card" data-doc-card data-tag="core">
+          <span class="tag tag--core">约定</span>
+          <h3><a href="./conventions.html">编码约定与护栏</a></h3>
+          <p>路径别名、API 分层、相对 pure-admin 的 MFM 改动清单。</p>
+          <div class="card-links"><a href="./conventions.html">打开 →</a></div>
+        </article>
+      </div>
+
+      <h2>业务模块</h2>
+      <div class="grid">
+        <article class="card" data-doc-card data-tag="module api">
+          <span class="tag tag--api">鉴权</span>
+          <h3><a href="./modules/auth-session.html">鉴权与会话</a></h3>
+          <p>login / dev-login / refresh、setToken、角色与权限。</p>
+          <div class="card-links">
+            <a href="./modules/auth-session.html">打开 →</a>
+          </div>
+        </article>
+        <article class="card" data-doc-card data-tag="module">
+          <span class="tag tag--core">路由</span>
+          <h3><a href="./modules/dynamic-routes.html">动态菜单与路由</a></h3>
+          <p>getAsyncRoutes、handleAsyncRoutes、菜单注册与 component 映射。</p>
+          <div class="card-links">
+            <a href="./modules/dynamic-routes.html">打开 →</a>
+          </div>
+        </article>
+        <article class="card" data-doc-card data-tag="module api">
+          <span class="tag tag--api">CRUD</span>
+          <h3><a href="./modules/collections-crud.html">集合文档 CRUD</a></h3>
+          <p>通用 Mongo 集合表格、JSON 编辑、白名单与分页。</p>
+          <div class="card-links">
+            <a href="./modules/collections-crud.html">打开 →</a>
+          </div>
+        </article>
+        <article class="card" data-doc-card data-tag="module api">
+          <span class="tag tag--api">HTTP</span>
+          <h3><a href="./modules/http-client.html">HTTP 客户端</a></h3>
+          <p>Axios 拦截器、Bearer、无感 refresh、错误信封。</p>
+          <div class="card-links">
+            <a href="./modules/http-client.html">打开 →</a>
+          </div>
+        </article>
+        <article class="card" data-doc-card data-tag="module">
+          <span class="tag tag--core">状态</span>
+          <h3><a href="./modules/pinia-state.html">Pinia 全局状态</a></h3>
+          <p>user / permission / multiTags / settings 边界。</p>
+          <div class="card-links">
+            <a href="./modules/pinia-state.html">打开 →</a>
+          </div>
+        </article>
+        <article class="card" data-doc-card data-tag="module">
+          <span class="tag tag--core">Layout</span>
+          <h3><a href="./modules/layout-shell.html">Layout 壳层</a></h3>
+          <p>侧栏、标签页、keep-alive、platform-config。</p>
+          <div class="card-links">
+            <a href="./modules/layout-shell.html">打开 →</a>
+          </div>
+        </article>
+      </div>
+
+      <h2>运维</h2>
+      <div class="grid">
+        <article class="card" data-doc-card data-tag="ops">
+          <span class="tag tag--ops">发布</span>
+          <h3><a href="./pages/deployment.html">构建与环境</a></h3>
+          <p>Vite 环境变量、联调、Docker 与 staging。</p>
+          <div class="card-links">
+            <a href="./pages/deployment.html">打开 →</a>
+          </div>
+        </article>
+        <article class="card" data-doc-card data-tag="ops">
+          <span class="tag tag--ops">质量</span>
+          <h3><a href="./pages/testing.html">测试与验收</a></h3>
+          <p>typecheck、lint、Harness verify、联调清单。</p>
+          <div class="card-links">
+            <a href="./pages/testing.html">打开 →</a>
+          </div>
+        </article>
+      </div>
+
+      <details>
+        <summary>Agent 与文档分层（Harness）</summary>
+        <div class="details-body">
+          <p><strong>单一事实分层</strong>：不要把所有知识塞进系统提示。</p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>层</th>
+                  <th>职责</th>
+                  <th>不应包含</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>AGENTS.md</code></td>
+                  <td>§0 命令、§1 目录真值、硬约束、索引表</td>
+                  <td>完整 Admin API 字段契约</td>
+                </tr>
+                <tr>
+                  <td><code>doc/</code> HTML</td>
+                  <td>专题展开；各文件自包含</td>
+                  <td>与 OpenAPI 重复的字段级契约</td>
+                </tr>
+                <tr>
+                  <td><code>.agents/skills/</code></td>
+                  <td>可执行工作流、检查清单</td>
+                  <td>整段复制 AGENTS §1</td>
+                </tr>
+                <tr>
+                  <td>OpenAPI</td>
+                  <td><code>/admin/*</code> 请求/响应字段</td>
+                  <td>pure-admin 布局叙事</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            <strong>冲突裁决</strong>：代码与 <code>AGENTS.md</code> §1
+            一致时以二者为准；Admin 路由以 mfm-api <code>router.py</code> +
+            OpenAPI 为准。
+          </p>
+          <p><strong>自动化校对</strong>：<code>pnpm verify:harness</code></p>
+        </div>
+      </details>
+
+      <footer class="foot">
+        冲突裁决：代码 + <code>AGENTS.md</code> §1 优先于文档。<br />
+        管理端开发技能：<code>.agents/skills/mfm-admin/SKILL.md</code>
+      </footer>
+    </div>
+    <script src="./assets/common.js"></script>
+    <script>
+      DocShell.init({ portal: true });
+    </script>
+  </body>
+</html>
