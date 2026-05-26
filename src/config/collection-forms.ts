@@ -92,6 +92,7 @@ const decorationStatusOptions: FormFieldOption[] = [
 export const bannerCategoryOptions: FormFieldOption[] = [
   { label: "首页顶部轮播", value: "home_top" },
   { label: "首页精选推荐", value: "home_small" },
+  { label: "销许列表页顶部", value: "project_list_license" },
   { label: "资讯顶部轮播", value: "news_top" },
   { label: "二手房页顶部轮播", value: "ershou_top" },
   { label: "活动推广", value: "activity" }

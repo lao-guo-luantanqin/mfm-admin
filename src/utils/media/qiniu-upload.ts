@@ -1,18 +1,29 @@
 import { fetchQiniuUploadToken } from "@/api/media/qiniu";
 import { compressImage } from "./compress-image";
 
-/** 七牛测试域名（*.hb-bkt.clouddn.com）备案前通常仅有 HTTP，HTTPS 证书未就绪 */
-const QINIU_TEST_HOST_SUFFIX = "hb-bkt.clouddn.com";
+/** 七牛测试域名（*.hb-bkt.clouddn.com），历史数据可能仍指向此 host */
+const QINIU_LEGACY_TEST_HOST = "hb-bkt.clouddn.com";
+/** 自定义 CDN 域名；HTTPS 证书就绪前使用 http */
+const QINIU_CDN_HOST = "cdn.cangyuansuanli.cn";
+const DEFAULT_CDN_BASE = `http://${QINIU_CDN_HOST}`;
+
+function rewriteLegacyCdnHost(url: string): string {
+  if (!url.includes(QINIU_LEGACY_TEST_HOST)) return url;
+  const match = url.match(/^https?:\/\/[^/]+(\/.*)?$/i);
+  const path = match?.[1] ?? "";
+  return `${DEFAULT_CDN_BASE}${path}`;
+}
 
 /**
  * 规范化媒体公开 URL。
- * 测试域名强制 http，避免 el-image 因证书错误显示「加载失败」。
+ * 旧测试域名重写到自定义 CDN；HTTPS 证书未就绪时强制 http。
  */
 export function normalizeMediaPublicUrl(url: string): string {
-  const trimmed = url.trim();
+  let trimmed = url.trim();
   if (!trimmed) return trimmed;
+  trimmed = rewriteLegacyCdnHost(trimmed);
   if (
-    trimmed.includes(QINIU_TEST_HOST_SUFFIX) &&
+    trimmed.includes(QINIU_CDN_HOST) &&
     trimmed.toLowerCase().startsWith("https://")
   ) {
     return trimmed.replace(/^https:\/\//i, "http://");
@@ -22,9 +33,7 @@ export function normalizeMediaPublicUrl(url: string): string {
 
 function cdnBase(): string {
   const raw = (import.meta.env.VITE_CDN_BASE_URL as string | undefined)?.trim();
-  const base = raw
-    ? raw.replace(/\/$/, "")
-    : "http://tfh32mszr.hb-bkt.clouddn.com";
+  const base = raw ? raw.replace(/\/$/, "") : DEFAULT_CDN_BASE;
   return normalizeMediaPublicUrl(base);
 }
 
