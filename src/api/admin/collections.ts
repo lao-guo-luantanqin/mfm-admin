@@ -20,7 +20,14 @@ export const fetchCollectionMeta = () => {
 
 export const fetchRecordsPage = (
   collection: string,
-  params: { currentPage: number; pageSize: number; keyword?: string }
+  params: {
+    currentPage: number;
+    pageSize: number;
+    keyword?: string;
+    filters?: string;
+    sortBy?: string;
+    sortOrder?: "asc" | "desc";
+  }
 ) => {
   return http.request<ApiResult<RecordsPage>>(
     "get",

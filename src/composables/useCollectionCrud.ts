@@ -12,6 +12,15 @@ import {
   rowToFormData,
   validateFormData
 } from "@/config/collection-forms";
+import {
+  collectionPageConfigs,
+  type CollectionFilterDef
+} from "@/config/business-modules";
+import {
+  useCollectionSort,
+  type CollectionSortDefaults
+} from "@/composables/useCollectionSort";
+import { useCollectionFilters } from "@/composables/useCollectionFilters";
 
 function newDocumentId(): string {
   const bytes = new Uint8Array(12);
@@ -19,8 +28,36 @@ function newDocumentId(): string {
   return Array.from(bytes, b => b.toString(16).padStart(2, "0")).join("");
 }
 
-export function useCollectionCrud(collection: string) {
+export type UseCollectionCrudOptions = {
+  sortDefaults?: CollectionSortDefaults;
+  filters?: CollectionFilterDef[];
+  initialFilters?: Record<string, string | number | boolean | undefined>;
+  /** 始终参与查询、不可在筛选栏重置的固定条件（如楼盘上下文 project_id） */
+  lockedFilters?: Record<string, string | number | boolean | undefined>;
+  /** 新建文档时预填字段 */
+  createDefaults?: Record<string, unknown>;
+};
+
+export function useCollectionCrud(
+  collection: string,
+  options: UseCollectionCrudOptions = {}
+) {
   const formConfig = getCollectionFormConfig(collection);
+  const pageConfig = collectionPageConfigs[collection];
+  const filterDefs = options.filters ?? pageConfig?.filters ?? [];
+  const sortDefaults = options.sortDefaults ?? pageConfig?.defaultSort;
+
+  const { sortState, onSortChange, sortParams } =
+    useCollectionSort(sortDefaults);
+  const {
+    values: filterValues,
+    resetFilters,
+    filterParams
+  } = useCollectionFilters(filterDefs);
+
+  if (options.initialFilters) {
+    Object.assign(filterValues, options.initialFilters);
+  }
 
   const state = reactive({
     keyword: "",
@@ -42,10 +79,19 @@ export function useCollectionCrud(collection: string) {
     if (!collection) return;
     state.loading = true;
     try {
+      const activeFilters = {
+        ...filterParams(),
+        ...(options.lockedFilters ?? {})
+      };
       const res = await fetchRecordsPage(collection, {
         currentPage: state.page,
         pageSize: state.pageSize,
-        keyword: state.keyword.trim() || undefined
+        keyword: state.keyword.trim() || undefined,
+        filters:
+          Object.keys(activeFilters).length > 0
+            ? JSON.stringify(activeFilters)
+            : undefined,
+        ...sortParams()
       });
       rows.value = res.data.list;
       state.total = res.data.total;
@@ -59,7 +105,10 @@ export function useCollectionCrud(collection: string) {
     editingId.value = null;
     editingRow.value = null;
     if (formConfig) {
-      formData.value = { ...(formConfig.defaults ?? {}) };
+      formData.value = {
+        ...(formConfig.defaults ?? {}),
+        ...(options.createDefaults ?? {})
+      };
       editorText.value = "";
     } else {
       editorText.value = "{\n  \n}";
@@ -131,13 +180,35 @@ export function useCollectionCrud(collection: string) {
 
   function onSearch() {
     state.page = 1;
-    loadList();
+    void loadList();
+  }
+
+  function onFilterSearch() {
+    onSearch();
+  }
+
+  function onFilterReset() {
+    resetFilters();
+    onSearch();
+  }
+
+  function handleSortChange(payload: {
+    prop: string;
+    order: "ascending" | "descending" | null;
+  }) {
+    onSortChange(payload);
+    state.page = 1;
+    void loadList();
   }
 
   return {
     formConfig,
+    pageConfig,
+    filterDefs,
+    filterValues,
     state,
     rows,
+    sortState,
     dialogVisible,
     dialogTitle,
     editorText,
@@ -148,6 +219,9 @@ export function useCollectionCrud(collection: string) {
     openEdit,
     saveDocument,
     removeRow,
-    onSearch
+    onSearch,
+    onFilterSearch,
+    onFilterReset,
+    handleSortChange
   };
 }

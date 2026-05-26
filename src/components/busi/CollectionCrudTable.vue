@@ -1,22 +1,33 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
-import type { CollectionColumnDef } from "@/config/business-modules";
+import { computed, onMounted } from "vue";
+import { collectionPageConfigs } from "@/config/business-modules";
 import { useCollectionCrud } from "@/composables/useCollectionCrud";
 import CollectionFormDialog from "@/components/busi/CollectionFormDialog.vue";
+import CollectionFilterBar from "@/components/busi/CollectionFilterBar.vue";
 import { resolveImageUrl } from "@/utils/media/qiniu-upload";
 import { hasPerms } from "@/utils/auth";
+import type { CollectionFilterDef } from "@/config/business-modules";
 
 defineOptions({ name: "CollectionCrudTable" });
 
 const props = defineProps<{
   collection: string;
-  title: string;
-  searchPlaceholder?: string;
-  columns: CollectionColumnDef[];
+  filters?: CollectionFilterDef[];
+  initialFilters?: Record<string, string | number | boolean | undefined>;
+  lockedFilters?: Record<string, string | number | boolean | undefined>;
+  createDefaults?: Record<string, unknown>;
+  hideColumns?: string[];
+  actionsWidth?: number;
+  /** 嵌入子页时隐藏标题并收紧顶栏 */
+  embedded?: boolean;
 }>();
+
+const pageConfig = computed(() => collectionPageConfigs[props.collection]);
 
 const {
   formConfig,
+  filterDefs,
+  filterValues,
   state,
   rows,
   dialogVisible,
@@ -29,16 +40,34 @@ const {
   openEdit,
   saveDocument,
   removeRow,
-  onSearch
-} = useCollectionCrud(props.collection);
+  onSearch,
+  onFilterSearch,
+  onFilterReset,
+  handleSortChange
+} = useCollectionCrud(props.collection, {
+  filters: props.filters,
+  initialFilters: props.initialFilters,
+  lockedFilters: props.lockedFilters,
+  createDefaults: props.createDefaults
+});
 
 const canWrite = hasPerms("admin:collection:write");
+const columns = computed(() => {
+  const all = pageConfig.value?.columns ?? [];
+  if (!props.hideColumns?.length) return all;
+  const hidden = new Set(props.hideColumns);
+  return all.filter(col => !hidden.has(col.prop));
+});
+const title = computed(() => pageConfig.value?.title ?? props.collection);
+const searchPlaceholder = computed(
+  () => pageConfig.value?.searchPlaceholder ?? "关键词"
+);
 
 function cellText(
   row: Record<string, unknown>,
-  col: CollectionColumnDef
+  col: (typeof columns.value)[number]
 ): string {
-  const raw = resolveValue(row, col.prop);
+  const raw = row[col.prop];
   if (raw == null || raw === "") return "—";
   if (col.type === "boolean") return raw ? "是" : "否";
   if (col.type === "tag" && col.tagMap && typeof raw === "string") {
@@ -47,8 +76,11 @@ function cellText(
   return String(raw);
 }
 
-function tagType(row: Record<string, unknown>, col: CollectionColumnDef) {
-  const raw = resolveValue(row, col.prop);
+function tagType(
+  row: Record<string, unknown>,
+  col: (typeof columns.value)[number]
+) {
+  const raw = row[col.prop];
   if (col.type === "tag" && col.tagMap && typeof raw === "string") {
     return col.tagMap[raw]?.type ?? "info";
   }
@@ -57,30 +89,31 @@ function tagType(row: Record<string, unknown>, col: CollectionColumnDef) {
 
 function imageUrl(
   row: Record<string, unknown>,
-  col: CollectionColumnDef
+  col: (typeof columns.value)[number]
 ): string {
-  return resolveImageUrl(resolveValue(row, col.prop));
-}
-
-function resolveValue(row: Record<string, unknown>, prop: string): unknown {
-  return row[prop];
+  return resolveImageUrl(row[col.prop]);
 }
 
 onMounted(() => {
-  loadList();
+  void loadList();
 });
 </script>
 
 <template>
-  <div class="collection-crud">
+  <div
+    class="collection-crud"
+    :class="{ 'collection-crud--embedded': embedded }"
+  >
     <el-card shadow="never">
       <template #header>
         <div class="collection-crud__header">
-          <span class="collection-crud__title">{{ title }}</span>
+          <span v-if="!embedded" class="collection-crud__title">{{
+            title
+          }}</span>
           <el-input
             v-model="state.keyword"
             clearable
-            :placeholder="searchPlaceholder ?? '关键词'"
+            :placeholder="searchPlaceholder"
             class="collection-crud__search"
             @keyup.enter="onSearch"
             @clear="onSearch"
@@ -88,13 +121,28 @@ onMounted(() => {
           <el-button type="primary" :loading="state.loading" @click="onSearch">
             查询
           </el-button>
-          <el-button v-if="canWrite" type="success" @click="openCreate"
-            >新建</el-button
-          >
+          <el-button v-if="canWrite" type="success" @click="openCreate">
+            新建
+          </el-button>
         </div>
       </template>
 
-      <el-table v-loading="state.loading" :data="rows" border stripe>
+      <CollectionFilterBar
+        v-if="filterDefs.length"
+        :model-value="filterValues"
+        :filters="filterDefs"
+        @update:model-value="patch => Object.assign(filterValues, patch)"
+        @search="onFilterSearch"
+        @reset="onFilterReset"
+      />
+
+      <el-table
+        v-loading="state.loading"
+        :data="rows"
+        border
+        stripe
+        @sort-change="handleSortChange"
+      >
         <el-table-column
           prop="_id"
           label="_id"
@@ -104,9 +152,12 @@ onMounted(() => {
         <el-table-column
           v-for="col in columns"
           :key="col.prop"
+          :prop="col.prop"
           :label="col.label"
           :width="col.width"
           :min-width="col.minWidth"
+          :sortable="col.sortable ? 'custom' : false"
+          :sort-orders="col.sortable ? ['descending', 'ascending'] : undefined"
           show-overflow-tooltip
         >
           <template #default="{ row }">
@@ -128,7 +179,7 @@ onMounted(() => {
             </el-tag>
             <el-tag
               v-else-if="col.type === 'boolean'"
-              :type="resolveValue(row, col.prop) ? 'success' : 'info'"
+              :type="row[col.prop] ? 'success' : 'info'"
               size="small"
             >
               {{ cellText(row, col) }}
@@ -136,14 +187,30 @@ onMounted(() => {
             <span v-else>{{ cellText(row, col) }}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="canWrite" label="操作" width="160" fixed="right">
+        <el-table-column
+          v-if="canWrite || $slots.actions"
+          label="操作"
+          :width="actionsWidth ?? (canWrite ? 160 : 120)"
+          fixed="right"
+        >
           <template #default="{ row }">
-            <el-button link type="primary" @click="openEdit(row)"
-              >编辑</el-button
+            <slot name="actions" :row="row" />
+            <el-button
+              v-if="canWrite"
+              link
+              type="primary"
+              @click="openEdit(row)"
             >
-            <el-button link type="danger" @click="removeRow(row)"
-              >删除</el-button
+              编辑
+            </el-button>
+            <el-button
+              v-if="canWrite"
+              link
+              type="danger"
+              @click="removeRow(row)"
             >
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -231,6 +298,10 @@ onMounted(() => {
     width: 56px;
     height: 56px;
     border-radius: 6px;
+  }
+
+  &--embedded {
+    padding: 0;
   }
 }
 </style>

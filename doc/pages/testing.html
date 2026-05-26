@@ -41,6 +41,13 @@
                   <td>ESLint + Prettier + Stylelint</td>
                 </tr>
                 <tr>
+                  <td><code>pnpm test</code></td>
+                  <td>
+                    Vitest：<code>tests/collections.test.ts</code>（mock
+                    http，断言 collections API 路径）
+                  </td>
+                </tr>
+                <tr>
                   <td><code>pnpm verify:harness</code></td>
                   <td>技能索引 + doc 门户关键页存在性</td>
                 </tr>
@@ -48,8 +55,9 @@
             </table>
           </div>
           <p>
-            当前仓库<strong>无</strong> Vitest 单测；回归以 typecheck +
-            联调为主。
+            日常回归：<code>typecheck</code> + <code>lint</code> +
+            <code>test</code> +
+            <code>verify:harness</code>；业务联调见下方清单。
           </p>
         </section>
 

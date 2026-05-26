@@ -2,36 +2,36 @@
 import { ref, watch } from "vue";
 import { fetchRecord, fetchRecordsPage } from "@/api/admin/collections";
 
-defineOptions({ name: "MfmProjectSearch" });
+defineOptions({ name: "MfmTagSearch" });
 
-type ProjectSuggestion = {
+export type TagSuggestion = {
   value: string;
   id: string;
-  district: string;
+  category: string;
 };
 
 const props = defineProps<{
-  projectId?: string;
+  tagId?: string;
   placeholder?: string;
 }>();
 
 const emit = defineEmits<{
-  "update:projectId": [value: string];
-  pick: [payload: { id: string; name: string }];
+  "update:tagId": [value: string];
+  pick: [payload: { id: string; name: string; category: string }];
 }>();
 
 const query = ref("");
 const loading = ref(false);
 
-async function loadProjectLabel(id: string) {
+async function loadTagLabel(id: string) {
   if (!id.trim()) {
     query.value = "";
     return;
   }
   loading.value = true;
   try {
-    const res = await fetchRecord("mfm_property_project", id.trim());
-    query.value = String(res.data.document.project_name ?? "");
+    const res = await fetchRecord("mfm_property_tag", id.trim());
+    query.value = String(res.data.document.name ?? "");
   } catch {
     query.value = "";
   } finally {
@@ -39,23 +39,23 @@ async function loadProjectLabel(id: string) {
   }
 }
 
-function searchProjects(
+function searchTags(
   queryString: string,
-  cb: (results: ProjectSuggestion[]) => void
+  cb: (results: TagSuggestion[]) => void
 ) {
   void (async () => {
     loading.value = true;
     try {
-      const res = await fetchRecordsPage("mfm_property_project", {
+      const res = await fetchRecordsPage("mfm_property_tag", {
         currentPage: 1,
-        pageSize: 15,
+        pageSize: 20,
         keyword: queryString.trim() || undefined
       });
       cb(
         res.data.list.map(row => ({
-          value: String(row.project_name ?? "未命名"),
+          value: String(row.name ?? "未命名"),
           id: String(row._id ?? ""),
-          district: String(row.district_name ?? "")
+          category: String(row.category ?? "")
         }))
       );
     } catch {
@@ -66,27 +66,32 @@ function searchProjects(
   })();
 }
 
-function onSelect(item: ProjectSuggestion) {
-  emit("update:projectId", item.id);
-  emit("pick", { id: item.id, name: item.value });
+function onSelect(item: TagSuggestion) {
+  emit("update:tagId", item.id);
+  emit("pick", {
+    id: item.id,
+    name: item.value,
+    category: item.category
+  });
   query.value = item.value;
 }
 
 function onClear() {
   query.value = "";
-  emit("update:projectId", "");
+  emit("update:tagId", "");
+  emit("pick", { id: "", name: "", category: "" });
 }
 
 function onBlur() {
-  if (props.projectId?.trim()) {
-    void loadProjectLabel(props.projectId);
+  if (props.tagId?.trim()) {
+    void loadTagLabel(props.tagId);
   }
 }
 
 watch(
-  () => props.projectId,
+  () => props.tagId,
   id => {
-    void loadProjectLabel(id ?? "");
+    void loadTagLabel(id ?? "");
   },
   { immediate: true }
 );
@@ -95,9 +100,9 @@ watch(
 <template>
   <el-autocomplete
     v-model="query"
-    class="mfm-project-search"
-    :fetch-suggestions="searchProjects"
-    :placeholder="placeholder ?? '输入项目名称搜索'"
+    class="mfm-tag-search"
+    :fetch-suggestions="searchTags"
+    :placeholder="placeholder ?? '输入标签名称搜索'"
     :trigger-on-focus="true"
     :debounce="300"
     clearable
@@ -107,10 +112,10 @@ watch(
     @blur="onBlur"
   >
     <template #default="{ item }">
-      <div class="mfm-project-search__option">
-        <span class="mfm-project-search__name">{{ item.value }}</span>
-        <span v-if="item.district" class="mfm-project-search__meta">
-          {{ item.district }}
+      <div class="mfm-tag-search__option">
+        <span class="mfm-tag-search__name">{{ item.value }}</span>
+        <span v-if="item.category" class="mfm-tag-search__meta">
+          {{ item.category }}
         </span>
       </div>
     </template>
@@ -118,25 +123,25 @@ watch(
 </template>
 
 <style scoped lang="scss">
-.mfm-project-search {
+.mfm-tag-search {
   width: 100%;
 }
 
-.mfm-project-search__option {
+.mfm-tag-search__option {
   display: flex;
   gap: 12px;
   align-items: center;
   justify-content: space-between;
 }
 
-.mfm-project-search__name {
+.mfm-tag-search__name {
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.mfm-project-search__meta {
+.mfm-tag-search__meta {
   flex-shrink: 0;
   font-size: 12px;
   color: var(--el-text-color-secondary);

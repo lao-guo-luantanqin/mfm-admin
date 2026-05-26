@@ -11,7 +11,7 @@
 - 安装依赖：`pnpm install`（Node ≥20.19 或 ≥22.13，包管理器见 `package.json`）
 - 本地环境：复制 **`.env.example`** 为 **`.env.development.local`**，设置 `VITE_SERVER_BASEURL` 指向 mfm-api
 - 开发：先启动 **`../mfm-api`**（`uv run -m mfm_api`），再 **`pnpm dev`** → http://localhost:8848
-- 质量闸门：`pnpm typecheck`；Lint：`pnpm lint`；Harness 校对：`pnpm verify:harness`
+- 质量闸门：`pnpm typecheck`；Lint：`pnpm lint`；单测：`pnpm test`；Harness 校对：`pnpm verify:harness`
 
 ---
 

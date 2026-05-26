@@ -23,6 +23,7 @@ export type CollectionFormField = {
     | "image-object"
     | "project-search"
     | "project-name-suggest"
+    | "tag-search"
     | "doc-id"
     | "date"
     | "string-list"
@@ -54,7 +55,7 @@ export type CollectionFormConfig = {
   defaults?: Record<string, unknown>;
 };
 
-const saleStatusOptions: FormFieldOption[] = [
+export const saleStatusOptions: FormFieldOption[] = [
   { label: "在售", value: "onsale" },
   { label: "预售", value: "presale" },
   { label: "售罄", value: "soldout" }
@@ -88,7 +89,7 @@ const decorationStatusOptions: FormFieldOption[] = [
   { label: "全装", value: "全装" }
 ];
 
-const bannerCategoryOptions: FormFieldOption[] = [
+export const bannerCategoryOptions: FormFieldOption[] = [
   { label: "首页顶部轮播", value: "home_top" },
   { label: "首页精选推荐", value: "home_small" },
   { label: "资讯顶部轮播", value: "news_top" },
@@ -108,6 +109,58 @@ export const projectImageCategoryOptions: FormFieldOption[] = [
   { label: "规划许可证", value: "规划许可证" },
   { label: "预售许可证", value: "预售许可证" }
 ];
+
+export const tagCategoryOptions: FormFieldOption[] = [
+  { label: "开发商", value: "developer" },
+  { label: "销售状态", value: "house_status" },
+  { label: "建筑指标", value: "building_metrics" },
+  { label: "交通配套", value: "transportation" },
+  { label: "教育配套", value: "education" },
+  { label: "商业配套", value: "commercial" },
+  { label: "生态配套", value: "ecological" },
+  { label: "居住体验", value: "living_experience" },
+  { label: "空间利用", value: "space_utilization" },
+  { label: "投资属性", value: "investment_attributes" }
+];
+
+export const tagTypeOptions: FormFieldOption[] = [
+  { label: "新房", value: "new_house" },
+  { label: "二手房", value: "second_hand" },
+  { label: "全场景", value: "all" }
+];
+
+const TAG_CATEGORY_COLORS: Record<string, string> = {
+  developer: "#11213D",
+  house_status: "#00C853",
+  building_metrics: "#D4A276",
+  transportation: "#2576F3",
+  education: "#722ED1",
+  commercial: "#EB2F96",
+  ecological: "#13C2C2",
+  living_experience: "#FA541C",
+  space_utilization: "#2F54EB",
+  investment_attributes: "#828caa"
+};
+
+function hexToRgba(hex: string, alpha: number): string {
+  const normalized = hex.replace("#", "");
+  if (normalized.length !== 6) return `rgba(153, 153, 153, ${alpha})`;
+  const r = Number.parseInt(normalized.slice(0, 2), 16);
+  const g = Number.parseInt(normalized.slice(2, 4), 16);
+  const b = Number.parseInt(normalized.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+export function tagColorsForCategory(category: string): {
+  color: string;
+  bgColor: string;
+} {
+  const color = TAG_CATEGORY_COLORS[category] ?? "#999999";
+  return {
+    color,
+    bgColor: hexToRgba(color, 0.12)
+  };
+}
 
 export const collectionFormConfigs: Record<string, CollectionFormConfig> = {
   mfm_property_project: {
@@ -677,7 +730,7 @@ export const collectionFormConfigs: Record<string, CollectionFormConfig> = {
   mfm_banner: {
     defaults: {
       status: true,
-      sort: 100,
+      sort_order: 100,
       category_id: "home_top"
     },
     sections: [
@@ -722,10 +775,10 @@ export const collectionFormConfigs: Record<string, CollectionFormConfig> = {
             span: 12
           },
           {
-            prop: "sort",
-            label: "权重排序",
+            prop: "sort_order",
+            label: "排序号",
             type: "number",
-            placeholder: "越小越靠前",
+            placeholder: "越大越靠前",
             span: 12
           },
           {
@@ -783,9 +836,9 @@ export const collectionFormConfigs: Record<string, CollectionFormConfig> = {
           },
           {
             prop: "sort_order",
-            label: "排序权重",
+            label: "排序号",
             type: "number",
-            placeholder: "数字越小越靠前",
+            placeholder: "越大越靠前",
             span: 12
           },
           {
@@ -825,6 +878,180 @@ export const collectionFormConfigs: Record<string, CollectionFormConfig> = {
             label: "审核展示",
             type: "switch",
             span: 12
+          }
+        ]
+      }
+    ]
+  },
+  mfm_property_tag: {
+    defaults: {
+      subtitle: "",
+      type: "all",
+      iconUrl: "",
+      hasHelpIcon: false,
+      helpText: "",
+      sort_order: 0,
+      likeCount: 0,
+      status: 1
+    },
+    sections: [
+      {
+        title: "基础信息",
+        fields: [
+          {
+            prop: "name",
+            label: "标签名称",
+            type: "text",
+            required: true,
+            placeholder: "例如：近地铁、准现房"
+          },
+          {
+            prop: "subtitle",
+            label: "副标题",
+            type: "text",
+            placeholder: "可选辅助文案"
+          },
+          {
+            prop: "category",
+            label: "标签分类",
+            type: "select",
+            required: true,
+            options: tagCategoryOptions,
+            span: 12
+          },
+          {
+            prop: "type",
+            label: "适用场景",
+            type: "select",
+            required: true,
+            options: tagTypeOptions,
+            span: 12
+          }
+        ]
+      },
+      {
+        title: "视觉样式",
+        fields: [
+          {
+            prop: "color",
+            label: "文字颜色",
+            type: "text",
+            placeholder: "#722ED1",
+            span: 12
+          },
+          {
+            prop: "bgColor",
+            label: "背景颜色",
+            type: "text",
+            placeholder: "rgba(114, 46, 209, 0.12)",
+            span: 12
+          },
+          {
+            prop: "iconUrl",
+            label: "图标 URL",
+            type: "text",
+            placeholder: "可选"
+          }
+        ]
+      },
+      {
+        title: "说明与排序",
+        fields: [
+          {
+            prop: "hasHelpIcon",
+            label: "显示说明图标",
+            type: "switch",
+            span: 12
+          },
+          {
+            prop: "status",
+            label: "启用状态",
+            type: "select",
+            options: [
+              { label: "启用", value: 1 },
+              { label: "禁用", value: 0 }
+            ],
+            span: 12
+          },
+          {
+            prop: "helpText",
+            label: "名词释义",
+            type: "textarea",
+            placeholder: "Tooltip 中展示的详细解释"
+          },
+          {
+            prop: "sort_order",
+            label: "排序号",
+            type: "number",
+            placeholder: "越大越靠前",
+            span: 12
+          },
+          {
+            prop: "likeCount",
+            label: "获赞数",
+            type: "number",
+            span: 12
+          }
+        ]
+      }
+    ]
+  },
+  mfm_property_project_tag: {
+    defaults: {
+      sort_order: 50
+    },
+    sections: [
+      {
+        title: "关联对象",
+        fields: [
+          {
+            prop: "project_id",
+            label: "楼盘项目",
+            type: "project-search",
+            required: true,
+            bindProp: "project_id",
+            placeholder: "输入项目名称搜索"
+          },
+          {
+            prop: "project_name",
+            label: "楼盘名称",
+            type: "text",
+            disabled: true,
+            placeholder: "选择项目后自动填入"
+          },
+          {
+            prop: "tag_id",
+            label: "标签",
+            type: "tag-search",
+            required: true,
+            bindProp: "tag_id",
+            placeholder: "输入标签名称搜索"
+          },
+          {
+            prop: "tag_name",
+            label: "标签名称",
+            type: "text",
+            disabled: true,
+            placeholder: "选择标签后自动填入"
+          },
+          {
+            prop: "category",
+            label: "标签分类",
+            type: "text",
+            disabled: true,
+            placeholder: "选择标签后自动填入"
+          }
+        ]
+      },
+      {
+        title: "展示排序",
+        fields: [
+          {
+            prop: "sort_order",
+            label: "排序号",
+            type: "number",
+            placeholder: "越大越靠前",
+            hint: "同一楼盘下多个标签的展示顺序"
           }
         ]
       }
@@ -1009,10 +1236,26 @@ export function formDataToDocument(
   const fields = config.sections.flatMap(s => s.fields);
 
   for (const field of fields) {
-    if (field.type === "project-search" || field.type === "doc-id") continue;
-    if (field.disabled) continue;
+    if (
+      field.type === "project-search" ||
+      field.type === "tag-search" ||
+      field.type === "doc-id"
+    )
+      continue;
 
     const val = form[field.prop];
+    if (field.disabled) {
+      if (
+        field.type === "text" &&
+        val !== undefined &&
+        val !== null &&
+        val !== ""
+      ) {
+        out[field.prop] = val;
+      }
+      continue;
+    }
+
     if (val === undefined) continue;
 
     if (field.type === "image") {
@@ -1083,11 +1326,13 @@ export function validateFormData(
   config: CollectionFormConfig
 ): string | null {
   for (const field of config.sections.flatMap(s => s.fields)) {
-    if (field.type === "project-search") {
+    if (field.type === "project-search" || field.type === "tag-search") {
       if (!field.required || !field.bindProp) continue;
       const bound = form[field.bindProp];
       if (bound === undefined || bound === null || bound === "") {
-        return `请选择${field.label}`;
+        return field.type === "tag-search"
+          ? `请选择${field.label}`
+          : `请选择${field.label}`;
       }
       continue;
     }

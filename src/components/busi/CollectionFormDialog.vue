@@ -8,6 +8,7 @@ import MfmImageUpload from "@/components/busi/MfmImageUpload.vue";
 import MfmGeoPointPicker from "@/components/busi/MfmGeoPointPicker.vue";
 import MfmProjectSearch from "@/components/busi/MfmProjectSearch.vue";
 import MfmProjectNameSuggest from "@/components/busi/MfmProjectNameSuggest.vue";
+import MfmTagSearch from "@/components/busi/MfmTagSearch.vue";
 
 defineOptions({ name: "CollectionFormDialog" });
 
@@ -42,9 +43,32 @@ function setField(prop: string, value: unknown) {
   emit("update:modelValue", { ...props.modelValue, [prop]: value });
 }
 
-function onProjectPick(field: CollectionFormField, projectId: string) {
+function onProjectPick(
+  field: CollectionFormField,
+  payload: string | { id: string; name: string }
+) {
+  const picked =
+    typeof payload === "string" ? { id: payload, name: "" } : payload;
   if (field.bindProp) {
-    setField(field.bindProp, projectId);
+    setField(field.bindProp, picked.id);
+  }
+  if (field.bindProp === "project_id" && picked.name) {
+    setField("project_name", picked.name);
+  }
+}
+
+function onTagPick(
+  field: CollectionFormField,
+  payload: { id: string; name: string; category: string }
+) {
+  if (field.bindProp) {
+    setField(field.bindProp, payload.id);
+  }
+  if (payload.name) {
+    setField("tag_name", payload.name);
+  }
+  if (payload.category) {
+    setField("category", payload.category);
   }
 }
 
@@ -52,6 +76,7 @@ function onProjectPick(field: CollectionFormField, projectId: string) {
 function formItemProp(field: CollectionFormField): string | undefined {
   if (
     field.type === "project-search" ||
+    field.type === "tag-search" ||
     field.type === "doc-id" ||
     field.type === "geo-point"
   ) {
@@ -144,7 +169,17 @@ watch(
                       : undefined
                   "
                   :placeholder="field.placeholder"
-                  @update:project-id="onProjectPick(field, $event)"
+                  @pick="onProjectPick(field, $event)"
+                />
+                <MfmTagSearch
+                  v-else-if="field.type === 'tag-search'"
+                  :tag-id="
+                    field.bindProp
+                      ? String(form[field.bindProp] ?? '')
+                      : undefined
+                  "
+                  :placeholder="field.placeholder"
+                  @pick="onTagPick(field, $event)"
                 />
                 <MfmProjectNameSuggest
                   v-else-if="field.type === 'project-name-suggest'"

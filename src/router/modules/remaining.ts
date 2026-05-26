@@ -44,5 +44,47 @@ export default [
         component: () => import("@/layout/redirect.vue")
       }
     ]
+  },
+  {
+    path: "/business/property-project-tag/manage",
+    component: Layout,
+    meta: {
+      title: "楼盘标签管理",
+      showLink: false
+    },
+    children: [
+      {
+        path: "",
+        name: "BusinessPropertyProjectTagManage",
+        component: () =>
+          import("@/views/business/property-project-tag/manage.vue"),
+        meta: {
+          title: "楼盘标签管理",
+          showLink: false,
+          activePath: "/business/property-project/index"
+        }
+      }
+    ]
+  },
+  {
+    path: "/business/property-project-image/manage",
+    component: Layout,
+    meta: {
+      title: "楼盘图片管理",
+      showLink: false
+    },
+    children: [
+      {
+        path: "",
+        name: "BusinessPropertyProjectImageManage",
+        component: () =>
+          import("@/views/business/property-project-image/manage.vue"),
+        meta: {
+          title: "楼盘图片管理",
+          showLink: false,
+          activePath: "/business/property-project/index"
+        }
+      }
+    ]
   }
 ] satisfies Array<RouteConfigsTable>;
