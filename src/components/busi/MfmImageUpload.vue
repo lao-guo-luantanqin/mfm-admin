@@ -5,7 +5,8 @@ import type { ImageStorageKind } from "@/config/collection-forms";
 import {
   bannerObjectKey,
   projectCoverObjectKey,
-  projectImageObjectKey
+  projectImageObjectKey,
+  staticAssetObjectKey
 } from "@/utils/storage/mfm-storage";
 import {
   resolveImageUrl,
@@ -25,6 +26,8 @@ const props = withDefaults(
     projectId?: string;
     /** project-image：图片分类（中文） */
     category?: string;
+    /** static-asset：asset_config.key，用于七牛路径分目录 */
+    assetKey?: string;
     /** image=存 string URL；image-object=存 { url, name, extname } */
     valueMode?: "string" | "object";
     hint?: string;
@@ -47,9 +50,14 @@ const phaseText = ref("");
 const previewUrl = computed(() => resolveImageUrl(props.modelValue));
 
 const uploadBlockedReason = computed(() => {
-  if (props.storage !== "project-image") return "";
-  if (!props.projectId?.trim()) return "请先选择楼盘";
-  if (!props.category?.trim()) return "请先选择图片分类";
+  if (props.storage === "project-image") {
+    if (!props.projectId?.trim()) return "请先选择楼盘";
+    if (!props.category?.trim()) return "请先选择图片分类";
+    return "";
+  }
+  if (props.storage === "static-asset" && !props.assetKey?.trim()) {
+    return "请先填写资产键 key";
+  }
   return "";
 });
 
@@ -63,6 +71,9 @@ function resolveObjectKey(fileName: string): string {
       props.projectId!.trim(),
       props.category!.trim()
     );
+  }
+  if (props.storage === "static-asset") {
+    return staticAssetObjectKey(fileName, props.assetKey?.trim());
   }
   return projectCoverObjectKey(fileName, props.docId ?? undefined);
 }

@@ -7,7 +7,11 @@ export type FormFieldOption = {
   value: string | number | boolean;
 };
 
-export type ImageStorageKind = "banner" | "project-cover" | "project-image";
+export type ImageStorageKind =
+  | "banner"
+  | "project-cover"
+  | "project-image"
+  | "static-asset";
 
 export type CollectionFormField = {
   prop: string;

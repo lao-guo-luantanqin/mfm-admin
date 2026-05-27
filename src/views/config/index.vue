@@ -30,6 +30,14 @@ const cards = [
     path: "/config/collections/index?page=global_config",
     icon: "ep:setting",
     gradient: "linear-gradient(135deg, #059669 0%, #047857 100%)"
+  },
+  {
+    id: "asset_config",
+    title: "数字资产",
+    description: "asset_config：图标/图片 key → 七牛 CDN 链接",
+    path: "/config/assets/index",
+    icon: "ep:picture",
+    gradient: "linear-gradient(135deg, #ea580c 0%, #c2410c 100%)"
   }
 ];
 

@@ -66,7 +66,13 @@ function defaultJsonForCollection(collection: string): string {
       props: {},
       style: {}
     },
-    dict_config: { dictKey: "exampleDict", entries: [] }
+    dict_config: { dictKey: "exampleDict", entries: [] },
+    asset_config: {
+      key: "example.asset",
+      kind: "icon",
+      url: "",
+      tags: []
+    }
   };
   return JSON.stringify(templates[collection] ?? {}, null, 2);
 }

@@ -37,6 +37,23 @@ export function bannerObjectKey(fileName: string): string {
   return buildObjectKey({ module: "marketing", sub: "banners", fileName });
 }
 
+/** 配置库 ``asset_config`` 等站点静态图标/插画 */
+export function staticAssetObjectKey(
+  fileName: string,
+  assetKey?: string
+): string {
+  const safeKey = (assetKey ?? "misc")
+    .trim()
+    .replace(/[^a-zA-Z0-9._-]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80);
+  return buildObjectKey({
+    module: "static",
+    sub: safeKey || "misc",
+    fileName
+  });
+}
+
 export function projectCoverObjectKey(
   fileName: string,
   projectId?: string
