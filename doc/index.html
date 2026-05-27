@@ -155,8 +155,8 @@
         </article>
       </div>
 
-      <details>
-        <summary>Agent 与文档分层（Harness）</summary>
+      <details id="doc-structure">
+        <summary>文档结构（Harness）</summary>
         <div class="details-body">
           <p><strong>单一事实分层</strong>：不要把所有知识塞进系统提示。</p>
           <div class="table-wrap">
@@ -171,8 +171,13 @@
               <tbody>
                 <tr>
                   <td><code>AGENTS.md</code></td>
-                  <td>§0 命令、§1 目录真值、硬约束、索引表</td>
+                  <td>§0 命令、§2 目录真值、硬约束、索引表</td>
                   <td>完整 Admin API 字段契约</td>
+                </tr>
+                <tr>
+                  <td><code>doc/index.html</code></td>
+                  <td>门户、目录约定、专题索引</td>
+                  <td>专题正文</td>
                 </tr>
                 <tr>
                   <td><code>doc/</code> HTML</td>
@@ -182,7 +187,7 @@
                 <tr>
                   <td><code>.agents/skills/</code></td>
                   <td>可执行工作流、检查清单</td>
-                  <td>整段复制 AGENTS §1</td>
+                  <td>整段复制 AGENTS</td>
                 </tr>
                 <tr>
                   <td>OpenAPI</td>
@@ -193,11 +198,19 @@
             </table>
           </div>
           <p>
-            <strong>冲突裁决</strong>：代码与 <code>AGENTS.md</code> §1
-            一致时以二者为准；Admin 路由以 mfm-api <code>router.py</code> +
-            OpenAPI 为准。
+            <strong>本仓落点</strong>：<code>modules/</code> 业务模块 ·
+            <code>pages/</code> 仅 deployment / testing。
           </p>
-          <p><strong>自动化校对</strong>：<code>pnpm verify:harness</code></p>
+          <p>
+            <strong>跨仓</strong>：后端 → mfm-api · compose → mfm-datacenter ·
+            小程序 → mfm-uniapp-vue3。
+          </p>
+          <p>
+            <strong>冲突裁决</strong>：代码与 <code>AGENTS.md</code> §2
+            一致时以二者为准。 <strong>校对</strong>：<code
+              >pnpm verify:harness</code
+            >
+          </p>
         </div>
       </details>
 

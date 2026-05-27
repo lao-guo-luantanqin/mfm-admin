@@ -89,13 +89,15 @@ const decorationStatusOptions: FormFieldOption[] = [
   { label: "全装", value: "全装" }
 ];
 
+/** ``mfm_banner.category_id``（与库表、page_config.props.categoryId 一致） */
 export const bannerCategoryOptions: FormFieldOption[] = [
-  { label: "首页顶部轮播", value: "home_top" },
-  { label: "首页精选推荐", value: "home_small" },
-  { label: "销许列表页顶部", value: "project_list_license" },
-  { label: "资讯顶部轮播", value: "news_top" },
-  { label: "二手房页顶部轮播", value: "ershou_top" },
-  { label: "活动推广", value: "activity" }
+  { label: "新房首页·顶部轮播", value: "home_carousel_top" },
+  { label: "新房首页·腰封小轮播", value: "home_carousel_small" },
+  { label: "二手房首页·顶部轮播", value: "ershou_carousel_top" },
+  { label: "楼盘列表·热门楼盘顶栏", value: "project_list_popular" },
+  { label: "楼盘列表·销许/登记顶栏", value: "project_list_license" },
+  { label: "资讯·顶部轮播", value: "news_carousel_top" },
+  { label: "营销·活动推广", value: "marketing_activity" }
 ];
 
 export const projectImageCategoryOptions: FormFieldOption[] = [
@@ -732,7 +734,7 @@ export const collectionFormConfigs: Record<string, CollectionFormConfig> = {
     defaults: {
       status: true,
       sort_order: 100,
-      category_id: "home_top"
+      category_id: "home_carousel_top"
     },
     sections: [
       {
