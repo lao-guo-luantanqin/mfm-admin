@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Reference · mfm-admin</title>
+    <link rel="stylesheet" href="../assets/style.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside id="doc-sidebar" class="side"></aside>
+      <main>
+        <a id="doc-back-home" class="back-home" href="../index.html"
+          >← 返回文档门户</a
+        >
+        <nav id="doc-breadcrumb" class="breadcrumb"></nav>
+        <article class="content-panel">
+          <p class="eyebrow muted">Diátaxis · Reference · 维护 2026-05-31</p>
+          <h1>Reference · 信息导向</h1>
+          <p class="lead">
+            <strong>读者意图：</strong>
+            「查准确信息。」结构化、可检索、偏事实表；HTTP 字段级契约以 mfm-api
+            OpenAPI 为准。
+          </p>
+          <h2 id="docs" class="section-anchor">本区文档</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>文档</th>
+                  <th>查什么</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><a href="./auth-session.html">鉴权与会话</a></td>
+                  <td>login / dev-login / refresh、setToken、角色与权限</td>
+                </tr>
+                <tr>
+                  <td><a href="./dynamic-routes.html">动态菜单与路由</a></td>
+                  <td>getAsyncRoutes、handleAsyncRoutes、component 映射</td>
+                </tr>
+                <tr>
+                  <td><a href="./collections-crud.html">集合文档 CRUD</a></td>
+                  <td>通用 Mongo 表格、JSON 编辑、白名单与分页</td>
+                </tr>
+                <tr>
+                  <td><a href="./http-client.html">HTTP 客户端</a></td>
+                  <td>Axios 拦截器、Bearer、无感 refresh、错误信封</td>
+                </tr>
+                <tr>
+                  <td><a href="./pinia-state.html">Pinia 全局状态</a></td>
+                  <td>user / permission / multiTags / settings 边界</td>
+                </tr>
+                <tr>
+                  <td><a href="./layout-shell.html">Layout 壳层</a></td>
+                  <td>侧栏、标签页、keep-alive、platform-config</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            Admin API 路由表与禁止模式见
+            <a href="../explanation/admin-api.html">Explanation · Admin API</a
+            >。
+          </p>
+        </article>
+      </main>
+    </div>
+    <script src="../assets/common.js"></script>
+    <script>
+      DocShell.init({ pageId: "reference-index", title: "Reference" });
+    </script>
+  </body>
+</html>

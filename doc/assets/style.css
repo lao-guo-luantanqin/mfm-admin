@@ -562,3 +562,24 @@ details .details-body {
 .section-anchor {
   scroll-margin-top: 24px;
 }
+
+.diagram {
+  margin: 16px 0 24px;
+  padding: 16px 20px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fafbfd;
+  overflow-x: auto;
+}
+
+.diagram .mermaid {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.section-lead {
+  color: var(--muted);
+  margin: 0 0 16px;
+  font-size: 14px;
+}

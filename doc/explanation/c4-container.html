@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>C4 Container · L2 · mfm-admin</title>
+    <link rel="stylesheet" href="../assets/style.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside id="doc-sidebar" class="side"></aside>
+      <main>
+        <a id="doc-back-home" class="back-home" href="../index.html"
+          >← 返回文档门户</a
+        >
+        <nav id="doc-breadcrumb" class="breadcrumb"></nav>
+        <header class="hero">
+          <div class="eyebrow muted">核心 · C4 · 维护 2026-05-31</div>
+          <h1>C4 Container · L2</h1>
+          <p class="lead">
+            运营后台浏览器 SPA；仅对接 mfm-api <code>/admin/*</code>，不直连
+            Mongo。
+          </p>
+          <div class="callout callout--info">
+            <strong>范围：</strong>
+            L1 见
+            <a href="../mfm-uniapp-vue3/doc/explanation/c4-workspace.html"
+              >C4 Workspace</a
+            >； L3 见
+            <a href="./explanation/c4-component.html">C4 Component</a>。 Admin
+            契约 → <a href="./explanation/admin-api.html">admin-api</a>。
+          </div>
+        </header>
+
+        <section id="container" class="panel section-anchor">
+          <h2>Container（L2）· 运行时边界</h2>
+          <p class="section-lead">
+            浏览器 SPA → Axios → mfm-api Admin；不直连 Mongo。
+          </p>
+          <div class="diagram">
+            <pre class="mermaid">
+flowchart TB
+  Browser["浏览器"]
+  subgraph admin["mfm-admin SPA"]
+    Layout["layout/ 壳"]
+    Views["views/business/*"]
+    HTTP["utils/http"]
+    Layout --> Views --> HTTP
+  end
+  API["mfm-api /admin/*"]
+  Browser --> Layout
+  HTTP --> API
+            </pre>
+          </div>
+        </section>
+
+        <section id="stack" class="panel section-anchor">
+          <h2>技术栈</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>层</th>
+                  <th>选型</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>框架</td>
+                  <td>Vue 3 + TypeScript</td>
+                </tr>
+                <tr>
+                  <td>UI</td>
+                  <td>Element Plus + Tailwind 4</td>
+                </tr>
+                <tr>
+                  <td>壳</td>
+                  <td>vue-pure-admin layout</td>
+                </tr>
+                <tr>
+                  <td>状态</td>
+                  <td>Pinia</td>
+                </tr>
+                <tr>
+                  <td>HTTP</td>
+                  <td>Axios · <code>utils/http</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="../assets/common.js"></script>
+    <script>
+      DocShell.init({ pageId: "c4-container", title: "C4 Container · L2" });
+    </script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: "neutral",
+        securityLevel: "loose"
+      });
+    </script>
+  </body>
+</html>

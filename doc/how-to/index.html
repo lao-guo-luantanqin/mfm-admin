@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>How-to · mfm-admin</title>
+    <link rel="stylesheet" href="../assets/style.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside id="doc-sidebar" class="side"></aside>
+      <main>
+        <a id="doc-back-home" class="back-home" href="../index.html"
+          >← 返回文档门户</a
+        >
+        <nav id="doc-breadcrumb" class="breadcrumb"></nav>
+        <article class="content-panel">
+          <p class="eyebrow muted">Diátaxis · How-to · 维护 2026-05-31</p>
+          <h1>How-to · 任务导向</h1>
+          <p class="lead">
+            <strong>读者意图：</strong>
+            「我要完成某件事。」步骤、命令、检查清单；假设读者已有基础。
+          </p>
+          <h2 id="docs" class="section-anchor">本区文档</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>文档</th>
+                  <th>任务</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><a href="./conventions.html">编码约定与护栏</a></td>
+                  <td>路径别名、API 分层、pure-admin 改动清单</td>
+                </tr>
+                <tr>
+                  <td><a href="./testing.html">测试与验收</a></td>
+                  <td>typecheck、lint、Harness verify、联调清单</td>
+                </tr>
+                <tr>
+                  <td><a href="./deployment.html">构建与环境</a></td>
+                  <td>Vite 环境变量、联调、Docker 与 staging</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            架构背景见
+            <a href="../explanation/index.html">Explanation</a>；模块查表见
+            <a href="../reference/index.html">Reference</a>。
+          </p>
+        </article>
+      </main>
+    </div>
+    <script src="../assets/common.js"></script>
+    <script>
+      DocShell.init({ pageId: "how-to-index", title: "How-to" });
+    </script>
+  </body>
+</html>

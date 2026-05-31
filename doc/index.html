@@ -9,31 +9,40 @@
   <body>
     <div class="portal">
       <header class="hero">
-        <div class="eyebrow muted">doc · Agent 工作台 · 维护 2026-05-23</div>
+        <div class="eyebrow muted">doc · Diátaxis · 维护 2026-05-31</div>
         <h1>mfm-admin · 文档套件</h1>
         <p class="lead">
-          按<strong>运营后台模块</strong>梳理的前端协作文档。日常入口：<code
-            >AGENTS.md</code
-          >
-          · 浏览器门户：<strong>本页</strong>。 全部专题为
-          <strong>HTML 真值</strong>，本地双击即可打开，无外部依赖。
+          严格按
+          <strong>Diátaxis 四象限</strong>
+          组织：每篇文档只归属一种读者意图。日常入口：
+          <code>AGENTS.md</code>
+          · 浏览器门户：
+          <strong>本页</strong>
+          。
         </p>
         <div class="callout callout--info">
-          <strong>文档形态（2026-05-23）：</strong>协作文档以
-          <strong>HTML</strong> 为唯一真值（<code>doc/</code>）； Harness
-          校对：<code>pnpm verify:harness</code>。
+          <strong>四象限（唯一分类轴）：</strong>
+          <code>tutorial/</code>
+          学习导向 ·
+          <code>how-to/</code>
+          任务导向 ·
+          <code>reference/</code>
+          信息查表 ·
+          <code>explanation/</code>
+          理解原理。
         </div>
         <div class="callout callout--ok">
-          <strong>Admin API 真值：</strong>仅对接 mfm-api
-          <code>/admin/*</code>（非 C 端 <code>/api/*</code>）； 运行时契约见
-          OpenAPI <code>/api/docs</code>（<code>admin</code> tag）；
-          后端实现：<code>../mfm-api/mfm_api/api/admin/</code>。
+          <strong>Admin API 真值：</strong>
+          仅对接 mfm-api
+          <code>/admin/*</code>
+          ；运行时契约见 OpenAPI
+          <code>/api/docs</code>
+          （admin tag）。
         </div>
         <div class="flow-block">
           登录 → Bearer → 动态菜单 → views/business/* → Axios →
           /admin/collections|auth|menus
         </div>
-
         <div class="search-bar">
           <input
             id="doc-search"
@@ -46,177 +55,190 @@
           <button type="button" class="filter-tag is-active" data-filter="all">
             全部
           </button>
-          <button type="button" class="filter-tag" data-filter="core">
-            核心
+          <button type="button" class="filter-tag" data-filter="tutorial">
+            Tutorial
           </button>
-          <button type="button" class="filter-tag" data-filter="module">
-            模块
+          <button type="button" class="filter-tag" data-filter="how-to">
+            How-to
           </button>
-          <button type="button" class="filter-tag" data-filter="api">
-            API
+          <button type="button" class="filter-tag" data-filter="reference">
+            Reference
           </button>
-          <button type="button" class="filter-tag" data-filter="ops">
-            运维
+          <button type="button" class="filter-tag" data-filter="explanation">
+            Explanation
           </button>
         </div>
       </header>
 
-      <h2>核心 · 架构与约定</h2>
+      <h2>Tutorial · 学习导向</h2>
+      <p class="muted">读者问：「带我走一遍，让我学会。」</p>
       <div class="grid">
-        <article class="card" data-doc-card data-tag="core">
-          <span class="tag tag--core">总览</span>
-          <h3><a href="./architecture.html">系统架构</a></h3>
-          <p>vue-pure-admin-thin 栈、与 mfm-api 拓扑、目录分层。</p>
-          <div class="card-links"><a href="./architecture.html">打开 →</a></div>
-        </article>
-        <article class="card" data-doc-card data-tag="core api">
-          <span class="tag tag--api">API</span>
-          <h3><a href="./admin-api.html">Admin API 边界</a></h3>
-          <p><code>/admin/*</code> 路由表、前后端文件对照、禁止模式。</p>
-          <div class="card-links"><a href="./admin-api.html">打开 →</a></div>
-        </article>
-        <article class="card" data-doc-card data-tag="core">
-          <span class="tag tag--core">约定</span>
-          <h3><a href="./conventions.html">编码约定与护栏</a></h3>
-          <p>路径别名、API 分层、相对 pure-admin 的 MFM 改动清单。</p>
-          <div class="card-links"><a href="./conventions.html">打开 →</a></div>
-        </article>
-      </div>
-
-      <h2>业务模块</h2>
-      <div class="grid">
-        <article class="card" data-doc-card data-tag="module api">
-          <span class="tag tag--api">鉴权</span>
-          <h3><a href="./modules/auth-session.html">鉴权与会话</a></h3>
-          <p>login / dev-login / refresh、setToken、角色与权限。</p>
+        <article class="card" data-doc-card data-tag="tutorial">
+          <span class="tag tag--core">门户</span>
+          <h3><a href="./tutorial/index.html">Tutorial · 门户</a></h3>
+          <p>学习路径索引。</p>
           <div class="card-links">
-            <a href="./modules/auth-session.html">打开 →</a>
+            <a href="./tutorial/index.html">打开 →</a>
           </div>
         </article>
-        <article class="card" data-doc-card data-tag="module">
-          <span class="tag tag--core">路由</span>
-          <h3><a href="./modules/dynamic-routes.html">动态菜单与路由</a></h3>
-          <p>getAsyncRoutes、handleAsyncRoutes、菜单注册与 component 映射。</p>
+        <article class="card" data-doc-card data-tag="tutorial">
+          <span class="tag tag--core">入门</span>
+          <h3><a href="./tutorial/getting-started.html">入门教程</a></h3>
+          <p>依赖 → 联调 → C4 → Admin API → 模块参考 → 约定。</p>
           <div class="card-links">
-            <a href="./modules/dynamic-routes.html">打开 →</a>
-          </div>
-        </article>
-        <article class="card" data-doc-card data-tag="module api">
-          <span class="tag tag--api">CRUD</span>
-          <h3><a href="./modules/collections-crud.html">集合文档 CRUD</a></h3>
-          <p>通用 Mongo 集合表格、JSON 编辑、白名单与分页。</p>
-          <div class="card-links">
-            <a href="./modules/collections-crud.html">打开 →</a>
-          </div>
-        </article>
-        <article class="card" data-doc-card data-tag="module api">
-          <span class="tag tag--api">HTTP</span>
-          <h3><a href="./modules/http-client.html">HTTP 客户端</a></h3>
-          <p>Axios 拦截器、Bearer、无感 refresh、错误信封。</p>
-          <div class="card-links">
-            <a href="./modules/http-client.html">打开 →</a>
-          </div>
-        </article>
-        <article class="card" data-doc-card data-tag="module">
-          <span class="tag tag--core">状态</span>
-          <h3><a href="./modules/pinia-state.html">Pinia 全局状态</a></h3>
-          <p>user / permission / multiTags / settings 边界。</p>
-          <div class="card-links">
-            <a href="./modules/pinia-state.html">打开 →</a>
-          </div>
-        </article>
-        <article class="card" data-doc-card data-tag="module">
-          <span class="tag tag--core">Layout</span>
-          <h3><a href="./modules/layout-shell.html">Layout 壳层</a></h3>
-          <p>侧栏、标签页、keep-alive、platform-config。</p>
-          <div class="card-links">
-            <a href="./modules/layout-shell.html">打开 →</a>
+            <a href="./tutorial/getting-started.html">打开 →</a>
           </div>
         </article>
       </div>
 
-      <h2>运维</h2>
+      <h2>How-to · 任务导向</h2>
+      <p class="muted">读者问：「我要完成某件事。」</p>
       <div class="grid">
-        <article class="card" data-doc-card data-tag="ops">
-          <span class="tag tag--ops">发布</span>
-          <h3><a href="./pages/deployment.html">构建与环境</a></h3>
-          <p>Vite 环境变量、联调、Docker 与 staging。</p>
+        <article class="card" data-doc-card data-tag="how-to">
+          <span class="tag tag--ops">门户</span>
+          <h3><a href="./how-to/index.html">How-to · 门户</a></h3>
+          <p>编码、测试、部署。</p>
+          <div class="card-links"><a href="./how-to/index.html">打开 →</a></div>
+        </article>
+        <article class="card" data-doc-card data-tag="how-to">
+          <h3><a href="./how-to/conventions.html">编码约定与护栏</a></h3>
+          <p>路径别名、API 分层、MFM 改动清单。</p>
+        </article>
+        <article class="card" data-doc-card data-tag="how-to">
+          <h3><a href="./how-to/testing.html">测试与验收</a></h3>
+          <p>typecheck、lint、Harness verify。</p>
+        </article>
+        <article class="card" data-doc-card data-tag="how-to">
+          <h3><a href="./how-to/deployment.html">构建与环境</a></h3>
+          <p>Vite env、联调、Docker。</p>
+        </article>
+      </div>
+
+      <h2>Reference · 信息导向</h2>
+      <p class="muted">读者问：「查准确信息。」</p>
+      <div class="grid">
+        <article class="card" data-doc-card data-tag="reference">
+          <span class="tag tag--core">门户</span>
+          <h3><a href="./reference/index.html">Reference · 门户</a></h3>
+          <p>鉴权、路由、CRUD、HTTP、Pinia、Layout。</p>
           <div class="card-links">
-            <a href="./pages/deployment.html">打开 →</a>
+            <a href="./reference/index.html">打开 →</a>
           </div>
         </article>
-        <article class="card" data-doc-card data-tag="ops">
-          <span class="tag tag--ops">质量</span>
-          <h3><a href="./pages/testing.html">测试与验收</a></h3>
-          <p>typecheck、lint、Harness verify、联调清单。</p>
+        <article class="card" data-doc-card data-tag="reference">
+          <h3><a href="./reference/auth-session.html">鉴权与会话</a></h3>
+          <p>login / refresh / setToken。</p>
+        </article>
+        <article class="card" data-doc-card data-tag="reference">
+          <h3><a href="./reference/dynamic-routes.html">动态菜单与路由</a></h3>
+          <p>getAsyncRoutes、菜单注册。</p>
+        </article>
+        <article class="card" data-doc-card data-tag="reference">
+          <h3><a href="./reference/collections-crud.html">集合文档 CRUD</a></h3>
+          <p>Mongo 表格、白名单。</p>
+        </article>
+        <article class="card" data-doc-card data-tag="reference">
+          <h3><a href="./reference/http-client.html">HTTP 客户端</a></h3>
+          <p>Axios 拦截器、Bearer。</p>
+        </article>
+        <article class="card" data-doc-card data-tag="reference">
+          <h3><a href="./reference/pinia-state.html">Pinia 全局状态</a></h3>
+          <p>user / permission / multiTags。</p>
+        </article>
+        <article class="card" data-doc-card data-tag="reference">
+          <h3><a href="./reference/layout-shell.html">Layout 壳层</a></h3>
+          <p>侧栏、标签页、keep-alive。</p>
+        </article>
+      </div>
+
+      <h2>Explanation · 理解导向</h2>
+      <p class="muted">读者问：「帮我理解为什么。」</p>
+      <div class="grid">
+        <article class="card" data-doc-card data-tag="explanation">
+          <span class="tag tag--core">门户</span>
+          <h3><a href="./explanation/index.html">Explanation · 门户</a></h3>
+          <p>C4、Admin API 边界。</p>
           <div class="card-links">
-            <a href="./pages/testing.html">打开 →</a>
+            <a href="./explanation/index.html">打开 →</a>
           </div>
+        </article>
+        <article class="card" data-doc-card data-tag="explanation">
+          <h3>
+            <a href="../mfm-uniapp-vue3/doc/explanation/c4-workspace.html"
+              >C4 Workspace · L1</a
+            >
+          </h3>
+          <p>五仓 Context。</p>
+        </article>
+        <article class="card" data-doc-card data-tag="explanation">
+          <h3>
+            <a href="./explanation/c4-container.html">C4 Container · L2</a>
+          </h3>
+          <p>Admin SPA 边界与技术栈。</p>
+        </article>
+        <article class="card" data-doc-card data-tag="explanation">
+          <h3>
+            <a href="./explanation/c4-component.html">C4 Component · L3</a>
+          </h3>
+          <p>views / api 目录职责。</p>
+        </article>
+        <article class="card" data-doc-card data-tag="explanation">
+          <h3><a href="./explanation/admin-api.html">Admin API 边界</a></h3>
+          <p><code>/admin/*</code> 路由表与禁止模式。</p>
         </article>
       </div>
 
       <details id="doc-structure">
-        <summary>文档结构（Harness）</summary>
+        <summary>Diátaxis 与 Harness 分层</summary>
         <div class="details-body">
-          <p><strong>单一事实分层</strong>：不要把所有知识塞进系统提示。</p>
           <div class="table-wrap">
             <table>
               <thead>
                 <tr>
                   <th>层</th>
                   <th>职责</th>
-                  <th>不应包含</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td><code>AGENTS.md</code></td>
-                  <td>§0 命令、§2 目录真值、硬约束、索引表</td>
-                  <td>完整 Admin API 字段契约</td>
+                  <td>§0 命令、§2 目录、硬约束、索引</td>
                 </tr>
                 <tr>
                   <td><code>doc/index.html</code></td>
-                  <td>门户、目录约定、专题索引</td>
-                  <td>专题正文</td>
+                  <td>Diátaxis 门户；不复制正文</td>
                 </tr>
                 <tr>
-                  <td><code>doc/</code> HTML</td>
-                  <td>专题展开；各文件自包含</td>
-                  <td>与 OpenAPI 重复的字段级契约</td>
+                  <td>
+                    <code>doc/{tutorial,how-to,reference,explanation}/</code>
+                  </td>
+                  <td>HTML 真值；每文件单一象限</td>
                 </tr>
                 <tr>
                   <td><code>.agents/skills/</code></td>
-                  <td>可执行工作流、检查清单</td>
-                  <td>整段复制 AGENTS</td>
+                  <td>Agent 可执行 SKILL.md</td>
                 </tr>
                 <tr>
                   <td>OpenAPI</td>
                   <td><code>/admin/*</code> 请求/响应字段</td>
-                  <td>pure-admin 布局叙事</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <p>
-            <strong>本仓落点</strong>：<code>modules/</code> 业务模块 ·
-            <code>pages/</code> 仅 deployment / testing。
-          </p>
-          <p>
-            <strong>跨仓</strong>：后端 → mfm-api · compose → mfm-datacenter ·
-            小程序 → mfm-uniapp-vue3。
-          </p>
-          <p>
-            <strong>冲突裁决</strong>：代码与 <code>AGENTS.md</code> §2
-            一致时以二者为准。 <strong>校对</strong>：<code
-              >pnpm verify:harness</code
-            >
+            <strong>校对</strong>：
+            <code>pnpm verify:harness</code>
+            · 冲突裁决：代码 +
+            <code>AGENTS.md</code>
+            §2
           </p>
         </div>
       </details>
 
       <footer class="foot">
-        冲突裁决：代码 + <code>AGENTS.md</code> §1 优先于文档。<br />
-        管理端开发技能：<code>.agents/skills/mfm-admin/SKILL.md</code>
+        管理端开发技能：
+        <code>.agents/skills/mfm-admin/SKILL.md</code>
+        · HTTP 契约：mfm-api OpenAPI
       </footer>
     </div>
     <script src="./assets/common.js"></script>

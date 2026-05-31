@@ -14,8 +14,8 @@ description: 济南买房么运营后台（vue-pure-admin-thin + mfm-api /admin/
 ## 阅读顺序
 
 1. 仓库根 **`AGENTS.md`** §0–§3（命令、目录、硬约束）
-2. **`doc/admin-api.html`** — `/admin/*` 路由表
-3. 按任务打开 **`doc/modules/*.html`** 专题
+2. **`doc/explanation/admin-api.html`** — `/admin/*` 路由表
+3. 按任务打开 **`doc/reference/*.html`** 专题
 4. 后端契约：mfm-api OpenAPI `/api/docs`（tag: `admin`）
 
 ## 硬约束
@@ -34,7 +34,7 @@ description: 济南买房么运营后台（vue-pure-admin-thin + mfm-api /admin/
 2. `src/api/admin/<feature>.ts` 封装 REST
 3. mfm-api：`api/admin/` + `schemas/admin/` + `services/admin/`
 4. `services/admin/menus/registry.py` 增加菜单节点
-5. 更新 `doc/admin-api.html` 路由表
+5. 更新 `doc/explanation/admin-api.html` 路由表
 
 ### 联调
 

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Explanation · mfm-admin</title>
+    <link rel="stylesheet" href="../assets/style.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside id="doc-sidebar" class="side"></aside>
+      <main>
+        <a id="doc-back-home" class="back-home" href="../index.html"
+          >← 返回文档门户</a
+        >
+        <nav id="doc-breadcrumb" class="breadcrumb"></nav>
+        <article class="content-panel">
+          <p class="eyebrow muted">Diátaxis · Explanation · 维护 2026-05-31</p>
+          <h1>Explanation · 理解导向</h1>
+          <p class="lead">
+            <strong>读者意图：</strong>
+            「帮我理解为什么。」背景、原理、架构、边界；不要求立刻动手。
+          </p>
+          <h2 id="docs" class="section-anchor">本区文档</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>文档</th>
+                  <th>理解什么</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <a
+                      href="../../mfm-uniapp-vue3/doc/explanation/c4-workspace.html"
+                      >C4 Workspace · L1</a
+                    >
+                  </td>
+                  <td>五仓 Context + 跨仓边界</td>
+                </tr>
+                <tr>
+                  <td><a href="./c4-container.html">C4 Container · L2</a></td>
+                  <td>Admin SPA 运行时与技术栈</td>
+                </tr>
+                <tr>
+                  <td><a href="./c4-component.html">C4 Component · L3</a></td>
+                  <td>views / api 目录分层与模块职责</td>
+                </tr>
+                <tr>
+                  <td><a href="./admin-api.html">Admin API 边界</a></td>
+                  <td><code>/admin/*</code> 路由表、前后端对照、禁止模式</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            操作步骤见 <a href="../how-to/index.html">How-to</a>；模块查表见
+            <a href="../reference/index.html">Reference</a>。
+          </p>
+        </article>
+      </main>
+    </div>
+    <script src="../assets/common.js"></script>
+    <script>
+      DocShell.init({ pageId: "explanation-index", title: "Explanation" });
+    </script>
+  </body>
+</html>

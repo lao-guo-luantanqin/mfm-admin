@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>入门教程 · mfm-admin</title>
+    <link rel="stylesheet" href="../assets/style.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside id="doc-sidebar" class="side"></aside>
+      <main>
+        <a id="doc-back-home" class="back-home" href="../index.html"
+          >← 返回文档门户</a
+        >
+        <nav id="doc-breadcrumb" class="breadcrumb"></nav>
+        <article class="content-panel">
+          <p class="eyebrow muted">Tutorial · 维护 2026-05-31</p>
+          <h1>入门教程：从零到第一次联调</h1>
+          <p class="lead">
+            面向新加入的开发者与
+            Agent：按顺序完成依赖、后端联调、架构速览与模块参考，再读编码约定。
+          </p>
+
+          <h2 id="step-1" class="section-anchor">1. 克隆与依赖</h2>
+          <pre><code>pnpm install
+cp .env.example .env.development.local</code></pre>
+          <p>
+            在 <code>.env.development.local</code> 设置
+            <code>VITE_SERVER_BASEURL</code> 指向 mfm-api（如
+            <code>http://127.0.0.1:8000</code>）。
+          </p>
+
+          <h2 id="step-2" class="section-anchor">2. 启动开发服务</h2>
+          <pre><code># 终端 1：mfm-api
+cd ../mfm-api && uv run -m mfm_api
+
+# 终端 2：Admin SPA
+pnpm dev</code></pre>
+          <p>
+            默认 http://localhost:8848。命令与硬约束见仓库根
+            <code>AGENTS.md</code> §0。
+          </p>
+
+          <h2 id="step-3" class="section-anchor">3. 理解架构（Explanation）</h2>
+          <ol>
+            <li>
+              <a href="../../mfm-uniapp-vue3/doc/explanation/c4-workspace.html"
+                >C4 Workspace · L1</a
+              >
+              — 五仓关系
+            </li>
+            <li>
+              <a href="../explanation/c4-container.html">C4 Container · L2</a>
+              — Admin SPA 边界
+            </li>
+            <li>
+              <a href="../explanation/c4-component.html">C4 Component · L3</a>
+              — views / api 目录职责
+            </li>
+            <li>
+              <a href="../explanation/admin-api.html">Admin API 边界</a>
+              — 仅 <code>/admin/*</code>，禁止 C 端 JWT
+            </li>
+          </ol>
+
+          <h2 id="step-4" class="section-anchor">4. 模块参考（Reference）</h2>
+          <p>按登录 → 菜单 → 业务页的数据流阅读：</p>
+          <ul>
+            <li>
+              <a href="../reference/auth-session.html">鉴权与会话</a> — login /
+              refresh / setToken
+            </li>
+            <li>
+              <a href="../reference/dynamic-routes.html">动态菜单与路由</a> —
+              getAsyncRoutes
+            </li>
+            <li>
+              <a href="../reference/collections-crud.html">集合文档 CRUD</a> —
+              Mongo 白名单表格
+            </li>
+            <li>
+              <a href="../reference/http-client.html">HTTP 客户端</a> — Axios
+              拦截器
+            </li>
+            <li>
+              <a href="../reference/pinia-state.html">Pinia 全局状态</a> — user
+              / permission
+            </li>
+            <li>
+              <a href="../reference/layout-shell.html">Layout 壳层</a> — 侧栏 ·
+              标签页
+            </li>
+          </ul>
+
+          <h2 id="step-5" class="section-anchor">5. 编码约定（How-to）</h2>
+          <p>
+            阅读
+            <a href="../how-to/conventions.html">编码约定与护栏</a>
+            ，重点：路径别名 <code>@/</code>、Admin API 分层、相对 pure-admin 的
+            MFM 改动清单。
+          </p>
+
+          <h2 id="step-6" class="section-anchor">6. 质量闸门</h2>
+          <pre><code>pnpm typecheck
+pnpm lint
+pnpm test
+pnpm verify:harness</code></pre>
+          <p>
+            详见 <a href="../how-to/testing.html">测试与验收</a> ·
+            <a href="../how-to/deployment.html">构建与环境</a>。
+          </p>
+
+          <h2 id="step-7" class="section-anchor">7. 第一次改动</h2>
+          <p>
+            建议路径：在 <code>views/business/</code> 改一个已有页 → 跑
+            typecheck + lint → 对照 OpenAPI <code>/api/docs</code>（admin
+            tag）自检字段。
+          </p>
+        </article>
+      </main>
+    </div>
+    <script src="../assets/common.js"></script>
+    <script>
+      DocShell.init({ pageId: "tutorial-getting-started", title: "入门教程" });
+    </script>
+  </body>
+</html>

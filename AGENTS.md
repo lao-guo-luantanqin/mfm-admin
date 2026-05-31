@@ -11,7 +11,7 @@
 
 ## §1 架构概览
 
-**pure-admin 定交互，mfm-api `/admin/*` 定契约** — 管理端不拼 C 端 JWT，不走 clientDB。数据流与模块边界见 **`doc/architecture.html`**、**`doc/admin-api.html`**。
+**pure-admin 定交互，mfm-api `/admin/*` 定契约** — 管理端不拼 C 端 JWT，不走 clientDB。数据流与模块边界见 **`doc/explanation/c4-container.html`**、**`doc/explanation/admin-api.html`**。
 
 ## §2 目录结构（以本节为准；与文档冲突时优先代码与本节）
 
@@ -41,18 +41,16 @@ doc/                  Agent 专题（HTML 真值）；门户 doc/index.html
 6. **鉴权存储**：pure-admin `setToken`（Cookie + localStorage）；401/403 清 token 回登录。
 7. **文档分层**：短规则在本文；展开进 **`doc/`**（HTML 真值），门户 **`doc/index.html`**。
 
-## §4 文档地图
+## §4 文档地图（Diátaxis）
 
-| 主题                        | 文件                                                                              |
-| --------------------------- | --------------------------------------------------------------------------------- |
-| 文档门户                    | `doc/index.html`                                                                  |
-| 架构 · Admin API            | `doc/architecture.html` · `doc/admin-api.html`                                    |
-| 鉴权 · 动态路由 · 集合 CRUD | `doc/modules/auth-session.html` · `dynamic-routes.html` · `collections-crud.html` |
-| HTTP · Pinia · Layout       | `doc/modules/http-client.html` · `pinia-state.html` · `layout-shell.html`         |
-| 编码 · 构建 · 测试          | `doc/conventions.html` · `doc/pages/deployment.html` · `doc/pages/testing.html`   |
-| 管理端开发技能              | `.agents/skills/mfm-admin/SKILL.md`                                               |
+| 象限            | 门户                         | 要点                                                                             |
+| --------------- | ---------------------------- | -------------------------------------------------------------------------------- |
+| **Tutorial**    | `doc/tutorial/index.html`    | 入门：`getting-started.html`                                                     |
+| **How-to**      | `doc/how-to/index.html`      | 约定、测试、部署                                                                 |
+| **Reference**   | `doc/reference/index.html`   | 鉴权、动态路由、集合 CRUD、HTTP、Pinia、Layout                                   |
+| **Explanation** | `doc/explanation/index.html` | C4 L2/L3、Admin API；L1 → `../mfm-uniapp-vue3/doc/explanation/c4-workspace.html` |
 
-HTTP 契约运行时真值：mfm-api OpenAPI **`/api/docs`**（admin tag）· Harness：`pnpm verify:harness`
+浏览器总门户 **`doc/index.html`** · 管理端开发技能 **`.agents/skills/mfm-admin/SKILL.md`** · HTTP 契约运行时真值：mfm-api OpenAPI **`/api/docs`**（admin tag）· Harness：`pnpm verify:harness`
 
 ## §5 不要做的事
 

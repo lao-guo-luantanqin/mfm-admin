@@ -22,4 +22,4 @@
 
 - Harness 入口：`AGENTS.md`
 - HTML 门户：`doc/index.html`
-- Admin API 路由表：`doc/admin-api.html`
+- Admin API 路由表：`doc/explanation/admin-api.html`
